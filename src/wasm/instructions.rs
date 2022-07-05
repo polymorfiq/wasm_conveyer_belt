@@ -1,885 +1,594 @@
 use super::types::*;
 
-pub(super) enum Instr {
-    NumericInst(NumericInst),
-    VecInst(VecInst),
-    ParametricInst(ParametricInst),
-    VariableInst(VariableInst),
-    TableInst(TableInst),
-    MemoryInst(MemoryInst),
-    ControlInst(ControlInst),
-    ExprInst(ExprInst),
+pub(super) trait Instr {
+    fn exec(&self) -> ResultType;
 }
 
 //
 // Numeric Instructions
 //
-pub(super) enum NumericInst {
-    I32Inst(I32Inst),
-    I64Inst(I64Inst),
-    F32Inst(F32Inst),
-    F64Inst(F64Inst),
-}
-
-// Unary Operations
-// Consume one operand and produce one result of the respective type.
-pub(super) enum UnOp {
-    I32UnaryOp(I32UnaryOp),
-    I64UnaryOp(I64UnaryOp),
-    F32UnaryOp(F32UnaryOp),
-    F64UnaryOp(F64UnaryOp),
-}
-
-// Binary Operations
-// Consume two operands and produce one result of the respective type.
-pub(super) enum BinOp {
-    I32BinaryOp(I32BinaryOp),
-    I64BinaryOp(I64BinaryOp),
-    F32BinaryOp(F32BinaryOp),
-    F64BinaryOp(F64BinaryOp),
-}
-
-// Test Operations
-// Consume one operand of the respective type and produce a Boolean integer result.
-pub(super) enum TestOp {
-    I32TestOp(I32TestOp),
-    I64TestOp(I64TestOp),
-}
-
-// Comparison Operations
-// Consume two operands of the respective type and produce a Boolean integer result.
-pub(super) enum RelOp {
-    I32RelOp(I32RelOp),
-    I64RelOp(I64RelOp),
-    F32RelOp(F32RelOp),
-    F64RelOp(F64RelOp),
-}
-
-// Conversion Operations
-// Consume a value of one type and produce a result of another.
-pub (super) enum CvtOp {
-    I32CvtOp(I32CvtOp),
-    I64CvtOp(I64CvtOp),
-    F32CvtOp(F32CvtOp),
-    F64CvtOp(F64CvtOp),
-}
 
 // I32 Instructions
-pub(super) enum I32Inst {
-    Const(u32),
+struct I32Const {a: u32}
 
-    I32UnaryOp(I32UnaryOp),
-    I32BinaryOp(I32BinaryOp),
-    I32TestOp(I32TestOp),
-    I32RelOp(I32RelOp),
-    I32CvtOp(I32CvtOp),
-}
+// I32 Unary Operations
+struct I32Clz {a: I32}
+struct I32Ctz {a: I32}
+struct I32Popcnt {a: I32}
 
-pub(super) enum I32UnaryOp {
-    Clz(I32),
-    Ctz(I32),
-    PopCnt(I32),
-}
+// I32 Binary Operations
+struct I32Add {a: I32, b: I32}
+struct I32Sub {a: I32, b: I32}
+struct I32Mul {a: I32, b: I32}
+struct I32DivU {a: I32, b: I32}
+struct I32DivS {a: I32, b: I32}
+struct I32RemU {a: I32, b: I32}
+struct I32RemS {a: I32, b: I32}
 
-pub(super) enum I32BinaryOp {
-    Add(I32, I32),
-    Sub(I32, I32),
-    Mul(I32, I32),
-    DivU(I32, I32),
-    DivS(I32, I32),
-    RemU(I32, I32),
-    RemS(I32, I32),
-}
+// I32 Test Operations
+struct I32Eqz {a: I32}
 
-pub(super) enum I32TestOp {
-    EqZ(I32),
-}
+// I32 Comparison Operations
+struct I32Eq {a: I32, b: I32}
+struct I32Ne {a: I32, b: I32}
+struct I32LtU {a: I32, b: I32}
+struct I32LtS {a: I32, b: I32}
+struct I32GtU {a: I32, b: I32}
+struct I32GtS {a: I32, b: I32}
+struct I32LeU {a: I32, b: I32}
+struct I32LeS {a: I32, b: I32}
+struct I32GeU {a: I32, b: I32}
+struct I32GeS {a: I32, b: I32}
 
-pub(super) enum I32RelOp {
-    Eq(I32, I32),
-    Ne(I32, I32),
-    LtU(I32, I32),
-    LtS(I32, I32),
-    GtU(I32, I32),
-    GtS(I32, I32),
-    LeU(I32, I32),
-    LeS(I32, I32),
-    GeU(I32, I32),
-    GeS(I32, I32),
-}
-
-pub(super) enum I32CvtOp {
-    Extend8S(I32),
-    Extend16S(I32),
-    WrapI64(I64),
-    TruncF32U(I32),
-    TruncF32S(I32),
-    TruncF64U(I32),
-    TruncF64S(I32),
-    TruncSatF32U(I32),
-    TruncSatF32S(I32),
-    TruncSatF64U(I32),
-    TruncSatF64S(I32),
-    ReinterpritF32(I32),
-}
+// I32 Convert Operations
+struct I32Extend8S {a: I32}
+struct I32Extend16S {a: I32}
+struct I32WrapI64 {a: I64}
+struct I32TruncF32U {a: F32}
+struct I32TruncF32S {a: F32}
+struct I32TruncF64U {a: F64}
+struct I32TruncF64S {a: F64}
+struct I32TruncSatF32U {a: F32}
+struct I32TruncSatF32S {a: F32}
+struct I32TruncSatF64U {a: F64}
+struct I32TruncSatF64S {a: F64}
+struct I32ReinterpretF32 {a: F32}
 
 // I64 Instructions
-pub(super) enum I64Inst {
-    Const(u64),
+struct I64Const {a: u64}
 
-    I64UnaryOp(I64UnaryOp),
-    I64BinaryOp(I64BinaryOp),
-    I64TestOp(I64TestOp),
-    I64RelOp(I64RelOp),
-    I64CvtOp(I64CvtOp),
-}
+// I64 Unary Operations
+struct I64Clz {a: I64}
+struct I64Ctz {a: I64}
+struct I64Popcnt {a: I64}
 
-pub(super) enum I64UnaryOp {
-    Clz(I64),
-    Ctz(I64),
-    PopCnt(I64),
-}
+// I64 Binary Operations
+struct I64Add {a: I64, b: I64}
+struct I64Sub {a: I64, b: I64}
+struct I64Mul {a: I64, b: I64}
+struct I64DivU {a: I64, b: I64}
+struct I64DivS {a: I64, b: I64}
+struct I64RemU {a: I64, b: I64}
+struct I64RemS {a: I64, b: I64}
 
-pub(super) enum I64BinaryOp {
-    Add(I64, I64),
-    Sub(I64, I64),
-    Mul(I64, I64),
-    DivU(I64, I64),
-    DivS(I64, I64),
-    RemU(I64, I64),
-    RemS(I64, I64),
-}
+// I64 Test Operations
+struct I64Eqz {a: I64}
 
-pub(super) enum I64TestOp {
-    EqZ(I64),
-}
+// I64 Comparison Operations
+struct I64Eq {a: I64, b: I64}
+struct I64Ne {a: I64, b: I64}
+struct I64LtU {a: I64, b: I64}
+struct I64LtS {a: I64, b: I64}
+struct I64GtU {a: I64, b: I64}
+struct I64GtS {a: I64, b: I64}
+struct I64LeU {a: I64, b: I64}
+struct I64LeS {a: I64, b: I64}
+struct I64GeU {a: I64, b: I64}
+struct I64GeS {a: I64, b: I64}
 
-pub(super) enum I64RelOp {
-    Eq(I64, I64),
-    Ne(I64, I64),
-    LtU(I64, I64),
-    LtS(I64, I64),
-    GtU(I64, I64),
-    GtS(I64, I64),
-    LeU(I64, I64),
-    LeS(I64, I64),
-    GeU(I64, I64),
-    GeS(I64, I64),
-}
-
-pub(super) enum I64CvtOp {
-    Extend8S(I64),
-    Extend16S(I64),
-    Extend32S(I64),
-    ExtendI32U(I32),
-    ExtendI32S(I32),
-    TruncF32U(I64),
-    TruncF32S(I64),
-    TruncF64U(I64),
-    TruncF64S(I64),
-    TruncSatF32U(I64),
-    TruncSatF32S(I64),
-    TruncSatF64U(I64),
-    TruncSatF64S(I64),
-    ReinterpritF64(I64),
-}
+// I64 Convert Operations
+struct I64Extend8S {a: I8}
+struct I64Extend16S {a: I16}
+struct I64Extend32S {a: I32}
+struct I64ExtendI32U {a: I32}
+struct I64ExtendI32S {a: I32}
+struct I64TruncF32U {a: F32}
+struct I64TruncF32S {a: F32}
+struct I64TruncF64U {a: F64}
+struct I64TruncF64S {a: F64}
+struct I64TruncSatF32U {a: F32}
+struct I64TruncSatF32S {a: F32}
+struct I64TruncSatF64U {a: F64}
+struct I64TruncSatF64S {a: F64}
+struct I64ReinterpretF64 {a: F64}
 
 // F32 Instructions
-pub(super) enum F32Inst {
-    Const(f32),
+struct F32Const {a: f32}
 
-    F32UnaryOp(F32UnaryOp),
-    F32BinaryOp(F32BinaryOp),
-    F32RelOp(F32RelOp),
-    F32CvtOp(F32CvtOp),
-}
+// F32 Unary Operations
+struct F32Abs {a: F32}
+struct F32Neg {a: F32}
+struct F32Sqrt {a: F32}
+struct F32Ceil {a: F32}
+struct F32Floor {a: F32}
+struct F32Trunc {a: F32}
+struct F32Nearest {a: F32}
 
-pub(super) enum F32UnaryOp {
-    Abs(F32),
-    Neg(F32),
-    Sqrt(F32),
-    Ceil(F32),
-    Floor(F32),
-    Trunc(F32),
-    Nearest(F32),
-}
+// F32 Binary Operations
+struct F32Add {a: F32, b: F32}
+struct F32Sub {a: F32, b: F32}
+struct F32Mul {a: F32, b: F32}
+struct F32Div {a: F32, b: F32}
+struct F32Min {a: F32, b: F32}
+struct F32Max {a: F32, b: F32}
+struct F32CopySign {a: F32, b: F32}
 
-pub(super) enum F32BinaryOp {
-    Add(F32, F32),
-    Sub(F32, F32),
-    Mul(F32, F32),
-    Div(F32, F32),
-    Min(F32, F32),
-    Max(F32, F32),
-    CopySign(F32, F32),
-}
+// F32 Comparison Operations
+struct F32Eq {a: F32, b: F32}
+struct F32Ne {a: F32, b: F32}
+struct F32Lt {a: F32, b: F32}
+struct F32Gt {a: F32, b: F32}
+struct F32Le {a: F32, b: F32}
+struct F32Ge {a: F32, b: F32}
 
-pub(super) enum F32RelOp {
-    Eq(F32, F32),
-    Ne(F32, F32),
-    Lt(F32, F32),
-    Gt(F32, F32),
-    Le(F32, F32),
-    Ge(F32, F32),
-}
-
-pub(super) enum F32CvtOp {
-    DemoteF64(F64),
-    ConvertI32U(I32),
-    ConvertI32S(I32),
-    ConvertI64U(I64),
-    ConvertI64S(I64),
-    ReinterpritI32(I32),
-    ReinterpritI64(I64),
-}
+// F32 Convert Operations
+struct F32DemoteF64 {a: F64}
+struct F32ConvertI32U {a: I32}
+struct F32ConvertI32S {a: I32}
+struct F32ConvertI64U {a: I64}
+struct F32ConvertI64S {a: I64}
+struct F32ReinterpretI32 {a: I32}
+struct F32ReinterpretI64 {a: I64}
 
 // F64 Instructions
-pub(super) enum F64Inst {
-    Const(f64),
+struct F64Const {a: f64}
 
-    F64UnaryOp(F64UnaryOp),
-    F64BinaryOp(F64BinaryOp),
-    F64RelOp(F64RelOp),
-    F64CvtOp(F64CvtOp),
-}
+// F64 Unary Operations
+struct F64Abs {a: F64}
+struct F64Neg {a: F64}
+struct F64Sqrt {a: F64}
+struct F64Ceil {a: F64}
+struct F64Floor {a: F64}
+struct F64Trunc {a: F64}
+struct F64Nearest {a: F64}
 
-pub(super) enum F64UnaryOp {
-    Abs(F64),
-    Neg(F64),
-    Sqrt(F64),
-    Ceil(F64),
-    Floor(F64),
-    Trunc(F64),
-    Nearest(F64),
-}
+// F64 Binary Operations
+struct F64Add {a: F64, b: F64}
+struct F64Sub {a: F64, b: F64}
+struct F64Mul {a: F64, b: F64}
+struct F64Div {a: F64, b: F64}
+struct F64Min {a: F64, b: F64}
+struct F64Max {a: F64, b: F64}
+struct F64CopySign {a: F64, b: F64}
 
-pub(super) enum F64BinaryOp {
-    Add(F64, F64),
-    Sub(F64, F64),
-    Mul(F64, F64),
-    Div(F64, F64),
-    Min(F64, F64),
-    Max(F64, F64),
-    CopySign(F64, F64),
-}
+// F64 Comparison Operations
+struct F64Eq {a: F64, b: F64}
+struct F64Ne {a: F64, b: F64}
+struct F64Lt {a: F64, b: F64}
+struct F64Gt {a: F64, b: F64}
+struct F64Le {a: F64, b: F64}
+struct F64Ge {a: F64, b: F64}
 
-pub(super) enum F64RelOp {
-    Eq(F64, F64),
-    Ne(F64, F64),
-    Lt(F64, F64),
-    Gt(F64, F64),
-    Le(F64, F64),
-    Ge(F64, F64),
-}
-
-pub(super) enum F64CvtOp {
-    PromoteF32(F32),
-    ConvertI32U(I32),
-    ConvertI32S(I32),
-    ConvertI64U(I64),
-    ConvertI64S(I64),
-    ReinterpritI32(I32),
-    ReinterpritI64(I32),
-}
+// F64 Convert Operations
+struct F64PromoteF32 {a: F32}
+struct F64ConvertI32U {a: I32}
+struct F64ConvertI32S {a: I32}
+struct F64ConvertI64U {a: I64}
+struct F64ConvertI64S {a: I64}
+struct F64ReinterpretI32 {a: I32}
+struct F64ReinterpretI64 {a: I64}
 
 //
 // Vector instructions
 //
-pub(super) enum VecInst {
-    Vec128Inst(Vec128Inst),
-    VecI8X16Inst(VecI8X16Inst),
-    VecI16X8Inst(VecI16X8Inst),
-    VecI32x4Inst(VecI32X4Inst),
-    VecI64x2Inst(VecI64X2Inst),
-    VecF32X4Inst(VecF32X4Inst),
-    VecF64X2Inst(VecF64X2Inst),
-}
-
-pub(super) enum VUnOp {
-    Vec128UnaryOp(Vec128UnaryOp),
-    VecI8X16UnaryOp(VecI8X16UnaryOp),
-    VecI16X8UnaryOp(VecI16X8UnaryOp),
-    VecI32X4UnaryOp(VecI32X4UnaryOp),
-    VecI64X2UnaryOp(VecI64X2UnaryOp),
-    VecF32X4UnaryOp(VecF32X4UnaryOp),
-    VecF64X2UnaryOp(VecF64X2UnaryOp),
-}
-
-pub(super) enum VBinOp {
-    Vec128BinaryOp(Vec128BinaryOp),
-
-    VecI8X16BinaryOp(VecI8X16BinaryOp),
-    VecI8X16MinMaxOp(VecI8X16MinMaxOp),
-    VecI8X16SatBinaryOp(VecI8X16SatBinaryOp),
-
-    VecI16X8BinaryOp(VecI16X8BinaryOp),
-    VecI16X8MinMaxOp(VecI16X8MinMaxOp),
-    VecI16X8SatBinaryOp(VecI16X8SatBinaryOp),
-
-    VecI32X4BinaryOp(VecI32X4BinaryOp),
-    VecI32X4MinMaxOp(VecI32X4MinMaxOp),
-
-    VecI64X2BinaryOp(VecI64X2BinaryOp),
-
-    VecF32X4BinaryOp(VecF32X4BinaryOp),
-    VecF64X2BinaryOp(VecF64X2BinaryOp),
-}
-
-pub(super) enum VTestOp {
-    VecI8X16TestOp(VecI8X16TestOp),
-    VecI16X8TestOp(VecI16X8TestOp),
-    VecI32X4TestOp(VecI32X4TestOp),
-    VecI64X2TestOp(VecI64X2TestOp),
-}
-
-pub(super) enum VRelOp {
-    VecI8X16RelOp(VecI8X16RelOp),
-    VecI16X8RelOp(VecI16X8RelOp),
-    VecI32X4RelOp(VecI32X4RelOp),
-    VecI64X2RelOp(VecI64X2RelOp),
-    VecF32X4RelOp(VecF32X4RelOp),
-    VecF64X2RelOp(VecF64X2RelOp),
-}
-
-pub(super) enum VCvtOp {
-    VecI16X8ConvertOp(VecI16X8ConvertOp),
-    VecI32X4ConvertOp(VecI32X4ConvertOp),
-    VecF32X4ConvertOp(VecF32X4ConvertOp),
-    VecF64X2ConvertOp(VecF64X2ConvertOp),
-}
 
 // Vec128 Instructions
-pub(super) enum Vec128Inst {
-    Const(u128),
-    
-    Vec128UnaryOp(Vec128UnaryOp),
-    Vec128BinaryOp(Vec128BinaryOp),
-    Vec128TernaryOp(Vec128TernaryOp),
-    Vec128TestOp(Vec128TestOp),
-}
+struct Vec128Const {a: u128}
 
-pub(super) enum Vec128UnaryOp {
-    Not(Vec128),
-}
+// Vec128 Unary Operations
+struct Vec128Not {a: Vec128}
 
-pub(super) enum Vec128BinaryOp {
-    And(Vec128, Vec128),
-    AndNot(Vec128, Vec128),
-    Or(Vec128, Vec128),
-    Xor(Vec128, Vec128),
-}
+// Vec128 Binary Operations
+struct Vec128And {a: Vec128, b: Vec128}
+struct Vec128AndNot {a: Vec128, b: Vec128}
+struct Vec128Or {a: Vec128, b: Vec128}
+struct Vec128Xor {a: Vec128, b: Vec128}
 
-pub(super) enum Vec128TernaryOp {
-    Bitselect(Vec128, Vec128, Vec128),
-}
+// Vec128 Comparison Operations
+struct Vec128Bitselect {a: Vec128, b: Vec128, c: Vec128}
 
-pub(super) enum Vec128TestOp {
-    AnyTrue(Vec128),
-}
+// Vec128 Test Operations
+struct Vec128AnyTrue {a: Vec128}
 
 // VecI8X16 Instructions
-pub(super) enum VecI8X16Inst {
-    Shuffle(VecI8X16),
-    Swizzle(VecI8X16),
-    Splat(I128),
-    ExtractLaneU(VecI8X16, LaneIdx),
-    ExtractLaneS(VecI8X16, LaneIdx),
-    ReplaceLane(VecI8X16, LaneIdx),
-    Bitmask(VecI8X16),
-    NarrowI16X8U(VecI16X8),
-    NarrowI16X8S(VecI16X8),
+struct VecI8x16Shuffle {a: VecI8X16}
+struct VecI8x16Swizzle {a: VecI8X16}
+struct VecI8x16Splat {a: VecI8X16}
+struct VecI8x16ExtractLaneU {a: VecI8X16, b: LaneIdx}
+struct VecI8x16ExtractLaneS {a: VecI8X16, b: LaneIdx}
+struct VecI8x16ReplaceLane {a: VecI8X16, b: LaneIdx}
+struct VecI8x16Bitmask {a: VecI8X16}
+struct VecI8x16NarrowI16x8U {a: VecI16X8}
+struct VecI8x16NarrowI16x8S {a: VecI16X8}
 
-    VecI8X16RelOp(VecI8X16RelOp),
-    VecI8X16UnaryOp(VecI8X16UnaryOp),
-    VecI8X16BinaryOp(VecI8X16BinaryOp),
-    VecI8X16TestOp(VecI8X16TestOp),
-    VecI8X16ShiftOp(VecI8X16ShiftOp),
-    VecI8X16MinMaxOp(VecI8X16MinMaxOp),
-    VecI8X16SatBinaryOp(VecI8X16SatBinaryOp),
-}
+// VecI8x16 Unary Operations
+struct VecI8x16Abs {a: VecI8X16}
+struct VecI8x16Neg {a: VecI8X16}
+struct VecI8x16PopCnt {a: VecI8X16}
 
-pub(super) enum VecI8X16RelOp {
-    Eq(VecI8X16, VecI8X16),
-    Ne(VecI8X16, VecI8X16),
-    LtU(VecI8X16, VecI8X16),
-    LtS(VecI8X16, VecI8X16),
-    GtU(VecI8X16, VecI8X16),
-    GtS(VecI8X16, VecI8X16),
-    LeU(VecI8X16, VecI8X16),
-    LeS(VecI8X16, VecI8X16),
-    GeU(VecI8X16, VecI8X16),
-    GeS(VecI8X16, VecI8X16),
-}
+// VecI8x16 Binary Operations
+struct VecI8x16Add {a: VecI8X16, b: VecI8X16}
+struct VecI8x16Sub {a: VecI8X16, b: VecI8X16}
+struct VecI8x16AvgrU {a: VecI8X16, b: VecI8X16}
 
-pub(super) enum VecI8X16UnaryOp {
-    Abs(VecI8X16),
-    Neg(VecI8X16),
-    PopCnt(VecI8X16),
-}
+// VecI8x16 Compare Operations
+struct VecI8x16Eq {a: VecI8X16, b: VecI8X16}
+struct VecI8x16Ne {a: VecI8X16, b: VecI8X16}
+struct VecI8x16LtU {a: VecI8X16, b: VecI8X16}
+struct VecI8x16LtS {a: VecI8X16, b: VecI8X16}
+struct VecI8x16GtU {a: VecI8X16, b: VecI8X16}
+struct VecI8x16GtS {a: VecI8X16, b: VecI8X16}
+struct VecI8x16LeU {a: VecI8X16, b: VecI8X16}
+struct VecI8x16LeS {a: VecI8X16, b: VecI8X16}
+struct VecI8x16GeU {a: VecI8X16, b: VecI8X16}
+struct VecI8x16GeS {a: VecI8X16, b: VecI8X16}
 
-pub(super) enum VecI8X16BinaryOp {
-    Add(VecI8X16, VecI8X16),
-    Sub(VecI8X16, VecI8X16),
-    AvgrU(VecI8X16, VecI8X16),
-}
+// VecI8x16 Test Operations
+struct VecI8x16AllTrue {a: VecI8X16}
 
-pub(super) enum VecI8X16TestOp {
-    AllTrue(VecI8X16),
-}
+// VecI8x16 Shift Operations
+struct VecI8x16Shl {a: VecI8X16, b: I32}
+struct VecI8x16ShrU {a: VecI8X16, b: I32}
+struct VecI8x16ShrS {a: VecI8X16, b: I32}
 
-pub(super) enum VecI8X16ShiftOp {
-    Shl(VecI8X16, I32),
-    ShrU(VecI8X16, I32),
-    ShrS(VecI8X16, I32),
-}
+// VecI8x16 MinMax Operations
+struct VecI8x16MinU {a: VecI8X16, b: VecI8X16}
+struct VecI8x16MinS {a: VecI8X16, b: VecI8X16}
+struct VecI8x16MaxU {a: VecI8X16, b: VecI8X16}
+struct VecI8x16MaxS {a: VecI8X16, b: VecI8X16}
 
-pub(super) enum VecI8X16MinMaxOp {
-    MinU(VecI8X16),
-    MinS(VecI8X16),
-    MaxU(VecI8X16),
-    MaxS(VecI8X16),
-}
-
-pub(super) enum VecI8X16SatBinaryOp {
-    AddSatU(VecI8X16),
-    AddSatS(VecI8X16),
-    SubSatU(VecI8X16),
-    SubSatS(VecI8X16),
-}
+// VecI8x16 Sat Binary Operations
+struct VecI8x16AddSatU {a: VecI8X16}
+struct VecI8x16AddSatS {a: VecI8X16}
+struct VecI8x16SubSatU {a: VecI8X16}
+struct VecI8x16SubSatS {a: VecI8X16}
 
 // VecI16X8 Instructions
-pub(super) enum VecI16X8Inst {
-    Splat(I128),
-    ExtractLaneU(VecI16X8, LaneIdx),
-    ExtractLaneS(VecI16X8, LaneIdx),
-    ReplaceLane(VecI16X8, LaneIdx),
-    Bitmask(VecI16X8),
-    NarrowI32X4U(VecI16X8),
-    NarrowI32X4S(VecI16X8),
+struct VecI16x8Splat {a: I128}
+struct VecI16x8ExtractLaneU {a: VecI16X8, b: LaneIdx}
+struct VecI16x8ExtractLaneS {a: VecI16X8, b: LaneIdx}
+struct VecI16x8ReplaceLane {a: VecI16X8, b: LaneIdx}
+struct VecI16x8Bitmask {a: VecI16X8}
+struct VecI16x8NarrowI32x4U {a: VecI32X4}
+struct VecI16x8NarrowI32x4S {a: VecI32X4}
 
-    VecI16X8RelOp(VecI16X8RelOp),
-    VecI16X8UnaryOp(VecI16X8UnaryOp),
-    VecI16X8BinaryOp(VecI16X8BinaryOp),
-    VecI16X8TestOp(VecI16X8TestOp),
-    VecI16X8ShiftOp(VecI16X8ShiftOp),
-    VecI16X8MinMaxOp(VecI16X8MinMaxOp),
-    VecI16X8SatBinaryOp(VecI16X8SatBinaryOp),
-    VecI16X8ConvertOp(VecI16X8ConvertOp),
-}
+// VecI16x8 Unary Operations
+struct VecI16x8Abs {a: VecI16X8}
+struct VecI16x8Neg {a: VecI16X8}
 
-pub(super) enum VecI16X8RelOp {
-    Eq(VecI16X8, VecI16X8),
-    Ne(VecI16X8, VecI16X8),
-    LtU(VecI16X8, VecI16X8),
-    LtS(VecI16X8, VecI16X8),
-    GtU(VecI16X8, VecI16X8),
-    GtS(VecI16X8, VecI16X8),
-    LeU(VecI16X8, VecI16X8),
-    LeS(VecI16X8, VecI16X8),
-    GeU(VecI16X8, VecI16X8),
-    GeS(VecI16X8, VecI16X8),
-}
+// VecI16x8 Binary Operations
+struct VecI16x8Add {a: VecI16X8, b: VecI16X8}
+struct VecI16x8Sub {a: VecI16X8, b: VecI16X8}
+struct VecI16x8Mul {a: VecI16X8, b: VecI16X8}
+struct VecI16x8AvgrU {a: VecI16X8, b: VecI16X8}
+struct VecI16x8Q15MulrSatS {a: VecI16X8, b: VecI16X8}
 
-pub(super) enum VecI16X8UnaryOp {
-    Abs(VecI16X8),
-    Neg(VecI16X8)
-}
+// VecI16x8 Test Operations
+struct VecI16x8AllTrue {a: VecI16X8}
 
-pub(super) enum VecI16X8BinaryOp {
-    Add(VecI16X8, VecI16X8),
-    Sub(VecI16X8, VecI16X8),
-    Mul(VecI16X8, VecI16X8),
-    AvgrU(VecI16X8, VecI16X8),
-    Q15MulrSatS(VecI16X8, VecI16X8),
-}
+// VecI16x8 Compare Operations
+struct VecI16x8Eq {a: VecI16X8, b: VecI16X8}
+struct VecI16x8Ne {a: VecI16X8, b: VecI16X8}
+struct VecI16x8LtU {a: VecI16X8, b: VecI16X8}
+struct VecI16x8LtS {a: VecI16X8, b: VecI16X8}
+struct VecI16x8GtU {a: VecI16X8, b: VecI16X8}
+struct VecI16x8GtS {a: VecI16X8, b: VecI16X8}
+struct VecI16x8LeU {a: VecI16X8, b: VecI16X8}
+struct VecI16x8LeS {a: VecI16X8, b: VecI16X8}
+struct VecI16x8GeU {a: VecI16X8, b: VecI16X8}
+struct VecI16x8GeS {a: VecI16X8, b: VecI16X8}
 
-pub(super) enum VecI16X8TestOp {
-    AllTrue(VecI16X8),
-}
+// VecI16x8 Shift Operations
+struct VecI16x8Shl {a: VecI16X8, b: I32}
+struct VecI16x8ShrU {a: VecI16X8, b: I32}
+struct VecI16x8ShrS {a: VecI16X8, b: I32}
 
-pub(super) enum VecI16X8ShiftOp {
-    Shl(VecI16X8, I32),
-    ShrU(VecI16X8, I32),
-    ShrS(VecI16X8, I32),
-}
+// VecI16x8 MinMax Operations
+struct VecI16x8MinU {a: VecI16X8, b: VecI16X8}
+struct VecI16x8MinS {a: VecI16X8, b: VecI16X8}
+struct VecI16x8MaxU {a: VecI16X8, b: VecI16X8}
+struct VecI16x8MaxS {a: VecI16X8, b: VecI16X8}
 
-pub(super) enum VecI16X8MinMaxOp {
-    MinU(VecI16X8),
-    MinS(VecI16X8),
-    MaxU(VecI16X8),
-    MaxS(VecI16X8),
-}
+// VecI16x8 Sat Binary Operations
+struct VecI16x8AddSatU {a: VecI16X8}
+struct VecI16x8AddSatS {a: VecI16X8}
+struct VecI16x8SubSatU {a: VecI16X8}
+struct VecI16x8SubSatS {a: VecI16X8}
 
-pub(super) enum VecI16X8SatBinaryOp {
-    AddSatU(VecI16X8),
-    AddSatS(VecI16X8),
-    SubSatU(VecI16X8),
-    SubSatS(VecI16X8),
-}
-
-pub(super) enum VecI16X8ConvertOp {
-    ExtendHalfI8X16U(VecI8X16),
-    ExtendHalfI8X16S(VecI8X16),
-    ExtMulHalfI8X16U(VecI8X16),
-    ExtMulHalfI8X16S(VecI8X16),
-    ExtAddPairwiseI8X16U(VecI8X16),
-    ExtAddPairwiseI8X16S(VecI8X16),
-}
+// Vec16x8 Convert Operations
+struct VecI16x8ExtendHalfI8x16U {a: VecI8X16}
+struct VecI16x8ExtendHalfI8x16S {a: VecI8X16}
+struct VecI16x8ExtMulHalfI8x16U {a: VecI8X16}
+struct VecI16x8ExtMulHalfI8x16S {a: VecI8X16}
+struct VecI16x8ExtAddPairwiseI8x16U {a: VecI8X16}
+struct VecI16x8ExtAddPairwiseI8x16S {a: VecI8X16}
 
 // VecI32X4 Instructions
-pub(super) enum VecI32X4Inst {
-    Splat(I128),
-    ExtractLane(VecI32X4, LaneIdx),
-    ReplaceLane(VecI32X4, LaneIdx),
-    Bitmask(VecI32X4),
-    DotI16X8S(VecI32X4),
+struct VecI32x4Splat {a: I128}
+struct VecI32x4ExtractLane {a: VecI32X4, b: LaneIdx}
+struct VecI32x4ReplaceLane {a: VecI32X4, b: LaneIdx}
+struct VecI32x4Bitmask {a: VecI32X4}
+struct VecI32x4DotI16x8S {a: VecI16X8}
 
-    VecI32X4RelOp(VecI32X4RelOp),
-    VecI32X4UnaryOp(VecI32X4UnaryOp),
-    VecI32X4BinaryOp(VecI32X4BinaryOp),
-    VecI32X4TestOp(VecI32X4TestOp),
-    VecI32X4ShiftOp(VecI32X4ShiftOp),
-    VecI32X4MinMaxOp(VecI32X4MinMaxOp),
-    VecI32X4ConvertOp(VecI32X4ConvertOp),
-}
+// VecI32x4 Unary Operations
+struct VecI32x4Abs {a: VecI32X4}
+struct VecI32x4Neg {a: VecI32X4}
 
-pub(super) enum VecI32X4RelOp {
-    Eq(VecI32X4, VecI32X4),
-    Ne(VecI32X4, VecI32X4),
-    LtU(VecI32X4, VecI32X4),
-    LtS(VecI32X4, VecI32X4),
-    GtU(VecI32X4, VecI32X4),
-    GtS(VecI32X4, VecI32X4),
-    LeU(VecI32X4, VecI32X4),
-    LeS(VecI32X4, VecI32X4),
-    GeU(VecI32X4, VecI32X4),
-    GeS(VecI32X4, VecI32X4),
-}
+// VecI32x4 Binary Operations
+struct VecI32x4Add {a: VecI32X4, b: VecI32X4}
+struct VecI32x4Sub {a: VecI32X4, b: VecI32X4}
+struct VecI32x4Mul {a: VecI32X4, b: VecI32X4}
 
-pub(super) enum VecI32X4UnaryOp {
-    Abs(VecI32X4),
-    Neg(VecI32X4)
-}
+// VecI32x4 Test Operations
+struct VecI32x4AllTrue {a: VecI32X4}
 
-pub(super) enum VecI32X4BinaryOp {
-    Add(VecI32X4, VecI32X4),
-    Sub(VecI32X4, VecI32X4),
-    Mul(VecI32X4, VecI32X4),
-}
+// VecI32x4 Compare Operations
+struct VecI32x4Eq {a: VecI32X4, b: VecI32X4}
+struct VecI32x4Ne {a: VecI32X4, b: VecI32X4}
+struct VecI32x4LtU {a: VecI32X4, b: VecI32X4}
+struct VecI32x4LtS {a: VecI32X4, b: VecI32X4}
+struct VecI32x4GtU {a: VecI32X4, b: VecI32X4}
+struct VecI32x4GtS {a: VecI32X4, b: VecI32X4}
+struct VecI32x4LeU {a: VecI32X4, b: VecI32X4}
+struct VecI32x4LeS {a: VecI32X4, b: VecI32X4}
+struct VecI32x4GeU {a: VecI32X4, b: VecI32X4}
+struct VecI32x4GeS {a: VecI32X4, b: VecI32X4}
 
-pub(super) enum VecI32X4TestOp {
-    AllTrue(VecI32X4),
-}
+// VecI32x4 Shift Operations
+struct VecI32x4Shl {a: VecI32X4, b: I32}
+struct VecI32x4ShrU {a: VecI32X4, b: I32}
+struct VecI32x4ShrS {a: VecI32X4, b: I32}
 
-pub(super) enum VecI32X4ShiftOp {
-    Shl(VecI32X4, I32),
-    ShrU(VecI32X4, I32),
-    ShrS(VecI32X4, I32),
-}
+// VecI32x4 MinMax Operations
+struct VecI32x4MinU {a: VecI32X4, b: VecI32X4}
+struct VecI32x4MinS {a: VecI32X4, b: VecI32X4}
+struct VecI32x4MaxU {a: VecI32X4, b: VecI32X4}
+struct VecI32x4MaxS {a: VecI32X4, b: VecI32X4}
 
-pub(super) enum VecI32X4MinMaxOp {
-    MinU(VecI32X4),
-    MinS(VecI32X4),
-    MaxU(VecI32X4),
-    MaxS(VecI32X4),
-}
-
-pub(super) enum VecI32X4ConvertOp {
-    ExtendHalfI16X8U(VecI16X8),
-    ExtendHalfI16X8S(VecI16X8),
-    ExtMulHalfI16X8U(VecI16X8),
-    ExtMulHalfI16X8S(VecI16X8),
-    ExtAddPairwiseI16X8U(VecI16X8),
-    ExtAddPairwiseI16X8S(VecI16X8),
-    TruncSatF32X4U(VecF32X4),
-    TruncSatF32X4S(VecF32X4),
-    TruncSatF64X2UZero(VecF64X2),
-    TruncsatF64X2SZero(VecF64X2),
-}
+// VecI32x4 Convert Operations
+struct VecI32x4ExtendHalfI16x8U {a: VecI16X8}
+struct VecI32x4ExtendHalfI16x8S {a: VecI16X8}
+struct VecI32x4ExtMulHalfI16x8U {a: VecI16X8}
+struct VecI32x4ExtMulHalfI16x8S {a: VecI16X8}
+struct VecI32x4ExtAddPairwiseI16x8U {a: VecI16X8}
+struct VecI32x4ExtAddPairwiseI16x8S {a: VecI16X8}
+struct VecI32x4TruncSatF32x4U {a: VecF32X4}
+struct VecI32x4TruncSatF32x4S {a: VecF32X4}
+struct VecI32x4TruncSatF64x2UZero {a: VecF64X2}
+struct VecI32x4TruncSatF64x2SZero {a: VecF64X2}
 
 // VecI64X2 Instructions
-pub(super) enum VecI64X2Inst {
-    Splat(I128),
-    ExtractLane(VecI64X2, LaneIdx),
-    ReplaceLane(VecI64X2, LaneIdx),
-    Bitmask(VecI64X2),
+struct VecI64x2Splat {a: I128}
+struct VecI64x2ExtractLane {a: VecI64X2, b: LaneIdx}
+struct VecI64x2ReplaceLane {a: VecI64X2, b: LaneIdx}
+struct VecI64x2Bitmask {a: VecI64X2}
 
-    VecI64X2RelOp(VecI64X2RelOp),
-    VecI64X2UnaryOp(VecI64X2UnaryOp),
-    VecI64X2BinaryOp(VecI64X2BinaryOp),
-    VecI64X2TestOp(VecI64X2TestOp),
-    VecI64X2ShiftOp(VecI64X2ShiftOp),
-    VecI64X2ConvertOp(VecI64X2ConvertOp),
-}
+// VecI64x2 Unary Operations
+struct VecI64x2Abs {a: VecI64X2}
+struct VecI64x2Neg {a: VecI64X2}
 
-pub(super) enum VecI64X2RelOp {
-    Eq(VecI64X2, VecI64X2),
-    Ne(VecI64X2, VecI64X2),
-    LtS(VecI64X2, VecI64X2),
-    GtS(VecI64X2, VecI64X2),
-    LeS(VecI64X2, VecI64X2),
-    GeS(VecI64X2, VecI64X2),
-}
+// VecI64x2 Binary Operations
+struct VecI64x2Add {a: VecI64X2, b: VecI64X2}
+struct VecI64x2Sub {a: VecI64X2, b: VecI64X2}
+struct VecI64x2Mul {a: VecI64X2, b: VecI64X2}
 
-pub(super) enum VecI64X2UnaryOp {
-    Abs(VecI64X2),
-    Neg(VecI64X2)
-}
+// VecI64x2 Test Operations
+struct VecI64x2AllTrue {a: VecI64X2}
 
-pub(super) enum VecI64X2BinaryOp {
-    Add(VecI64X2, VecI64X2),
-    Sub(VecI64X2, VecI64X2),
-    Mul(VecI64X2, VecI64X2),
-}
+// VecI64x2 Compare Operations
+struct VecI64x2Eq {a: VecI64X2, b: VecI64X2}
+struct VecI64x2Ne {a: VecI64X2, b: VecI64X2}
+struct VecI64x2LtS {a: VecI64X2, b: VecI64X2}
+struct VecI64x2GtS {a: VecI64X2, b: VecI64X2}
+struct VecI64x2LeS {a: VecI64X2, b: VecI64X2}
+struct VecI64x2GeS {a: VecI64X2, b: VecI64X2}
 
-pub(super) enum VecI64X2TestOp {
-    AllTrue(VecI64X2),
-}
+// VecI64x2 Shift Operations
+struct VecI64x2Shl {a: VecI64X2, b: I32}
+struct VecI64x2ShrU {a: VecI64X2, b: I32}
+struct VecI64x2ShrS {a: VecI64X2, b: I32}
 
-pub(super) enum VecI64X2ShiftOp {
-    Shl(VecI64X2, I32),
-    ShrU(VecI64X2, I32),
-    ShrS(VecI64X2, I32),
-}
-
-pub(super) enum VecI64X2ConvertOp {
-    ExtendHalfI32X4U(VecI32X4),
-    ExtendHalfI32X4S(VecI32X4),
-    ExtMulHalfI32X4U(VecI32X4),
-    ExtMulHalfI32X4S(VecI32X4),
-}
+// VecI64x2 Convert Operations
+struct VecI64x2ExtendHalfI32x4U {a: VecI32X4}
+struct VecI64x2ExtendHalfI32x4S {a: VecI32X4}
+struct VecI64x2ExtMulHalfI32x4U {a: VecI32X4}
+struct VecI64x2ExtMulHalfI32x4S {a: VecI32X4}
 
 // VecF32X4 Instructions
-pub(super) enum VecF32X4Inst {
-    Splat(I128),
-    ExtractLane(VecF32X4, LaneIdx),
-    ReplaceLane(VecF32X4, LaneIdx),
+struct VecF32x4Splat {a: I128}
+struct VecF32x4ExtractLane {a: VecF32X4, b: LaneIdx}
+struct VecF32x4ReplaceLane {a: VecF32X4, b: LaneIdx}
 
-    VecF32X4RelOp(VecF32X4RelOp),
-    VecF32X4UnaryOp(VecF32X4UnaryOp),
-    VecF32X4BinaryOp(VecF32X4BinaryOp),
-    VecF32X4ConvertOp(VecF32X4ConvertOp),
-}
+// VecF32x4 Unary Operations
+struct VecF32x4Abs {a: VecF32X4}
+struct VecF32x4Neg {a: VecF32X4}
+struct VecF32x4Sqrt {a: VecF32X4}
+struct VecF32x4Ceil {a: VecF32X4}
+struct VecF32x4Floor {a: VecF32X4}
+struct VecF32x4Trunc {a: VecF32X4}
+struct VecF32x4Nearest {a: VecF32X4}
 
-pub(super) enum VecF32X4RelOp {
-    Eq(VecF32X4, VecF32X4),
-    Ne(VecF32X4, VecF32X4),
-    Lt(VecF32X4, VecF32X4),
-    Gt(VecF32X4, VecF32X4),
-    Le(VecF32X4, VecF32X4),
-    Ge(VecF32X4, VecF32X4),
-}
+// VecF32x4 Binary Operations
+struct VecF32x4Add {a: VecF32X4, b: VecF32X4}
+struct VecF32x4Sub {a: VecF32X4, b: VecF32X4}
+struct VecF32x4Mul {a: VecF32X4, b: VecF32X4}
+struct VecF32x4Div {a: VecF32X4, b: VecF32X4}
+struct VecF32x4Min {a: VecF32X4, b: VecF32X4}
+struct VecF32x4Max {a: VecF32X4, b: VecF32X4}
+struct VecF32x4PMin {a: VecF32X4, b: VecF32X4}
+struct VecF32x4PMax {a: VecF32X4, b: VecF32X4}
 
-pub(super) enum VecF32X4UnaryOp {
-    Abs(VecF32X4),
-    Neg(VecF32X4),
-    Sqrt(VecF32X4),
-    Ceil(VecF32X4),
-    Floor(VecF32X4),
-    Trunc(VecF32X4),
-    Nearest(VecF32X4)
-}
+// VecF32x4 Compare Operations
+struct VecF32x4Eq {a: VecF32X4, b: VecF32X4}
+struct VecF32x4Ne {a: VecF32X4, b: VecF32X4}
+struct VecF32x4Lt {a: VecF32X4, b: VecF32X4}
+struct VecF32x4Gt {a: VecF32X4, b: VecF32X4}
+struct VecF32x4Le {a: VecF32X4, b: VecF32X4}
+struct VecF32x4Ge {a: VecF32X4, b: VecF32X4}
 
-pub(super) enum VecF32X4BinaryOp {
-    Add(VecF32X4, VecF32X4),
-    Sub(VecF32X4, VecF32X4),
-    Mul(VecF32X4, VecF32X4),
-    Div(VecF32X4, VecF32X4),
-    Min(VecF32X4, VecF32X4),
-    Max(VecF32X4, VecF32X4),
-    PMin(VecF32X4, VecF32X4),
-    PMax(VecF32X4, VecF32X4),
-}
+// VecF32x4 Convert Operations
+struct VecF32x4ConvertI32x4U {a: VecI32X4}
+struct VecF32x4ConvertI32x4S {a: VecI32X4}
+struct VecF32x4DemoteF64x2Zero {a: VecF64X2}
 
-pub(super) enum VecF32X4ConvertOp {
-    ConvertI32X4U(VecI32X4),
-    ConvertI32X4S(VecI32X4),
-    DemoteF64X2Zero(VecF64X2),
-}
+// VecF64x2 Instructions
+struct VecF64x2Splat {a: I128}
+struct VecF64x2ExtractLane {a: VecF64X2, b: LaneIdx}
+struct VecF64x2ReplaceLane {a: VecF64X2, b: LaneIdx}
 
-// VecF64X2 Instructions
-pub(super) enum VecF64X2Inst {
-    Splat(I128),
-    ExtractLane(VecF64X2, LaneIdx),
-    ReplaceLane(VecF64X2, LaneIdx),
+// VecF64x2 Unary Operations
+struct VecF64x2Abs {a: VecF64X2}
+struct VecF64x2Neg {a: VecF64X2}
+struct VecF64x2Sqrt {a: VecF64X2}
+struct VecF64x2Ceil {a: VecF64X2}
+struct VecF64x2Floor {a: VecF64X2}
+struct VecF64x2Trunc {a: VecF64X2}
+struct VecF64x2Nearest {a: VecF64X2}
 
-    VecF64X2RelOp(VecF64X2RelOp),
-    VecF64X2UnaryOp(VecF64X2UnaryOp),
-    VecF64X2BinaryOp(VecF64X2BinaryOp),
-    VecF64X2ConvertOp(VecF64X2ConvertOp),
-}
+// VecF64x2 Binary Operations
+struct VecF64x2Add {a: VecF64X2, b: VecF64X2}
+struct VecF64x2Sub {a: VecF64X2, b: VecF64X2}
+struct VecF64x2Mul {a: VecF64X2, b: VecF64X2}
+struct VecF64x2Div {a: VecF64X2, b: VecF64X2}
+struct VecF64x2Min {a: VecF64X2, b: VecF64X2}
+struct VecF64x2Max {a: VecF64X2, b: VecF64X2}
+struct VecF64x2PMin {a: VecF64X2, b: VecF64X2}
+struct VecF64x2PMax {a: VecF64X2, b: VecF64X2}
 
-pub(super) enum VecF64X2RelOp {
-    Eq(VecF64X2, VecF64X2),
-    Ne(VecF64X2, VecF64X2),
-    Lt(VecF64X2, VecF64X2),
-    Gt(VecF64X2, VecF64X2),
-    Le(VecF64X2, VecF64X2),
-    Ge(VecF64X2, VecF64X2),
-}
+// VecF64x2 Compare Operations
+struct VecF64x2Eq {a: VecF64X2, b: VecF64X2}
+struct VecF64x2Ne {a: VecF64X2, b: VecF64X2}
+struct VecF64x2Lt {a: VecF64X2, b: VecF64X2}
+struct VecF64x2Gt {a: VecF64X2, b: VecF64X2}
+struct VecF64x2Le {a: VecF64X2, b: VecF64X2}
+struct VecF64x2Ge {a: VecF64X2, b: VecF64X2}
 
-pub(super) enum VecF64X2UnaryOp {
-    Abs(VecF64X2),
-    Neg(VecF64X2),
-    Sqrt(VecF64X2),
-    Ceil(VecF64X2),
-    Floor(VecF64X2),
-    Trunc(VecF64X2),
-    Nearest(VecF64X2)
-}
-
-pub(super) enum VecF64X2BinaryOp {
-    Add(VecF64X2, VecF64X2),
-    Sub(VecF64X2, VecF64X2),
-    Mul(VecF64X2, VecF64X2),
-    Div(VecF64X2, VecF64X2),
-    Min(VecF64X2, VecF64X2),
-    Max(VecF64X2, VecF64X2),
-    PMin(VecF64X2, VecF64X2),
-    PMax(VecF64X2, VecF64X2),
-}
-
-pub(super) enum VecF64X2ConvertOp {
-    ConvertLowI32X4U(VecI32X4),
-    ConvertLowI32X4S(VecI32X4),
-    PromoteLowF32X4(VecF32X4),
-}
+// VecF64x2 Convert Operations
+struct VecF64x2ConvertLowI32x4U {a: VecI32X4}
+struct VecF64x2ConvertLowI32x4S {a: VecI32X4}
+struct VecF64x2PromotLowF32x4 {a: VecF32X4}
 
 //
 // Reference Instructions
 //
-pub(super) enum RefInst {
-    FuncRefInst(FuncRefInst),
-    ExternRefInst(ExternRefInst)
-}
+struct FuncRefNull {}
+struct FuncRefIsNull {a: bool}
+struct FuncRefRef {a: FuncRef}
 
-pub(super) enum FuncRefInst {
-    Null(),
-    IsNull(FuncRef),
-    FuncRef(FuncRef)
-}
-
-pub(super) enum ExternRefInst {
-    Null(),
-    IsNull(ExternRef),
-    ExternRef(ExternRef)
-}
+struct ExternRefNull {}
+struct ExternRefIsNull {a: bool}
+struct ExternRefRef {a: ExternRef}
 
 //
 // Parametric Instructions
 //
-pub(super) enum ParametricInst {
-    Drop(),
-    Select(Vec<ValType>)
-}
+struct ParametricDrop {}
+struct ParametricSelect{a: Vec<ValType>}
 
 //
 // Variable Instructions
 //
-pub(super) enum VariableInst {
-    LocalGet(LocalIdx),
-    LocalSet(LocalIdx),
-    LocalTee(LocalIdx),
-    GlobalGet(GlobalIdx),
-    GlobalSet(GlobalIdx),
-}
+struct VariableLocalGet {a: LocalIdx}
+struct VariableLocalSet {a: LocalIdx}
+struct VariableLocalTee {a: LocalIdx}
+struct VariableGlobalGet {a: GlobalIdx}
+struct VariableGlobalSet {a: GlobalIdx}
 
 //
 // Table Instructions
 //
-pub(super) enum TableInst {
-    Get(TableIdx),
-    Set(TableIdx),
-    Size(TableIdx),
-    Grow(TableIdx),
-    Fill(TableIdx),
-    Copy(TableIdx, TableIdx),
-    Init(TableIdx, ElemIdx),
-    ElemDrop(ElemIdx)
-}
+struct TableGet {a: TableIdx}
+struct TableSet {a: TableIdx}
+struct TableSize {a: TableIdx}
+struct TableGrow {a: TableIdx}
+struct TableFill {a: TableIdx}
+struct TableCopy {a: TableIdx, b: TableIdx}
+struct TableInit {a: TableIdx, b: ElemIdx}
+struct TableElemDrop {a: ElemIdx}
 
 //
 // Memory Instructions
 //
-pub(super) enum MemoryInst {
-    I32Load(Offset, Align),
-    I32Store(Offset, Align),
-    I32Load8U(Offset, Align),
-    I32Load8S(Offset, Align),
-    I32Store8(Offset, Align),
-    I32Load16U(Offset, Align),
-    I32Load16S(Offset, Align),
-    I32Store16(Offset, Align),
+struct MemSize {}
+struct MemGrow {}
+struct MemFill {}
+struct MemCopy {}
+struct MemInit {a: DataIdx}
+struct MemDataDrop {a: DataIdx}
 
-    I64Load(Offset, Align),
-    I64Store(Offset, Align),
-    I64Load8U(Offset, Align),
-    I64Load8S(Offset, Align),
-    I64Store8(Offset, Align),
-    I64Load16U(Offset, Align),
-    I64Load16S(Offset, Align),
-    I64Store16(Offset, Align),
-    I64Load32U(Offset, Align),
-    I64Load32S(Offset, Align),
-    I64Store32(Offset, Align),
+struct MemI32Load {a: Offset, b: Align}
+struct MemI64Load {a: Offset, b: Align}
+struct MemF32Load {a: Offset, b: Align}
+struct MemF64Load {a: Offset, b: Align}
+struct MemI32Load8U {a: Offset, b: Align}
+struct MemI32Load8S {a: Offset, b: Align}
+struct MemI32Load16U {a: Offset, b: Align}
+struct MemI32Load16S {a: Offset, b: Align}
+struct MemI64Load8U {a: Offset, b: Align}
+struct MemI64Load8S {a: Offset, b: Align}
+struct MemI64Load16U {a: Offset, b: Align}
+struct MemI64Load16S {a: Offset, b: Align}
+struct MemI64Load32U {a: Offset, b: Align}
+struct MemI64Load32S {a: Offset, b: Align}
+struct MemI32Store {a: Offset, b: Align}
+struct MemI64Store {a: Offset, b: Align}
+struct MemF32Store {a: Offset, b: Align}
+struct MemF64Store {a: Offset, b: Align}
+struct MemI32Store8 {a: Offset, b: Align}
+struct MemI32Store16 {a: Offset, b: Align}
+struct MemI64Store8 {a: Offset, b: Align}
+struct MemI64Store16 {a: Offset, b: Align}
+struct MemI64Store32 {a: Offset, b: Align}
 
-    F32Load(Offset, Align),
-    F32Store(Offset, Align),
-
-    F64Load(Offset, Align),
-    F64Store(Offset, Align),
-
-    V128Load(Offset, Align),
-    V128Load8X8U(Offset, Align),
-    V128Load8X8S(Offset, Align),
-    V128Load16X4U(Offset, Align),
-    V128Load16X4S(Offset, Align),
-    V128Load32X2U(Offset, Align),
-    V128Load32X2S(Offset, Align),
-    V128Load32Zero(Offset, Align),
-    V128Load64Zero(Offset, Align),
-    V128Load8Splat(Offset, Align),
-    V128Load16Splat(Offset, Align),
-    V128Load32Splat(Offset, Align),
-    V128Load64Splat(Offset, Align),
-    V128Load8Lane(Offset, Align, LaneIdx),
-    V128Load16Lane(Offset, Align, LaneIdx),
-    V128Load32Lane(Offset, Align, LaneIdx),
-    V128Load64Lane(Offset, Align, LaneIdx),
-    V128Store(Offset, Align),
-    V128Store8Lane(Offset, Align, LaneIdx),
-    V128Store16Lane(Offset, Align, LaneIdx),
-    V128Store32Lane(Offset, Align, LaneIdx),
-    V128Store64Lane(Offset, Align, LaneIdx),
-
-    Size(),
-    Grow(),
-    Fill(),
-    Copy(),
-    Init(DataIdx),
-    DataDrop(DataIdx)
-}
+struct MemV128Load {a: Offset, b: Align}
+struct MemV128Load8x8U {a: Offset, b: Align}
+struct MemV128Load8x8S {a: Offset, b: Align}
+struct MemV128Load16x4U {a: Offset, b: Align}
+struct MemV128Load16x4S {a: Offset, b: Align}
+struct MemV128Load32x2U {a: Offset, b: Align}
+struct MemV128Load32x2S {a: Offset, b: Align}
+struct MemV128Load32Zero {a: Offset, b: Align}
+struct MemV128Load64Zero {a: Offset, b: Align}
+struct MemV128Load8Splat {a: Offset, b: Align}
+struct MemV128Load16Splat {a: Offset, b: Align}
+struct MemV128Load32Splat {a: Offset, b: Align}
+struct MemV128Load64Splat {a: Offset, b: Align}
+struct MemV128Load8Lane {a: Offset, b: Align}
+struct MemV128Load16Lane {a: Offset, b: Align}
+struct MemV128Load32Lane {a: Offset, b: Align}
+struct MemV128Load64Lane {a: Offset, b: Align}
+struct MemV128Store {a: Offset, b: Align}
+struct MemV128Store8Lane {a: Offset, b: Align}
+struct MemV128Store16Lane {a: Offset, b: Align}
+struct MemV128Store32Lane {a: Offset, b: Align}
+struct MemV128Store64Lane {a: Offset, b: Align}
 
 //
 // Control Instructions
 //
-pub(super) enum ControlInst {
-    Nop(),
-    Unreachable(),
-    Block(BlockType, Vec<Instr>),
-    Loop(BlockType, Vec<Instr>),
-    If(BlockType, Vec<Instr>, Vec<Instr>),
-    Br(LabelIdx),
-    BrIf(LabelIdx),
-    BrTable(Vec<LabelIdx>, LabelIdx),
-    Return(),
-    Call(FuncIdx),
-    CallIndirect(TableIdx, TypeIdx)
-}
+struct ControlNop {}
+struct ControlUnreachable {}
+struct ControlBlock<'a> {a: BlockType, b: Vec<&'a dyn Instr>}
+struct ControlLoop<'a> {a: BlockType, b: Vec<&'a dyn Instr>}
+struct ControlIf<'a> {a: BlockType, b: Vec<&'a dyn Instr>, c: Vec<&'a dyn Instr>}
+struct ControlBr {a: LabelIdx}
+struct ControlBrIf {a: LabelIdx}
+struct ControlBrTable {a: Vec<LabelIdx>, b: LabelIdx}
+struct ControlReturn {}
+struct ControlCall {a: FuncIdx}
+struct ControlCallIndirect {a: TableIdx, b: TypeIdx}
 
 //
 // Expr Instructions
 //
-pub(super) enum ExprInst {
-    Expr(Vec<Instr>)
-}
+struct Expr<'a>{a: Vec<&'a dyn Instr>}

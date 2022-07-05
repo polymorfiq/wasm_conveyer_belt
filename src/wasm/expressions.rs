@@ -1,3 +1,3 @@
 use super::instructions::*;
 
-pub(super) type Expr = Vec<Instr>;
+pub(super) type Expr = Vec<dyn Instr>;
