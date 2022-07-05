@@ -7,5 +7,19 @@ pub struct Module {
     mems: Vec<Memory>,
     globals: Vec<Global>,
     elems: Vec<Elem>,
-    data: Vec<Data>,
+    datas: Vec<Data>,
+    start: Option<Start>,
+    imports: Vec<Imo>
+}
+
+struct ValStack {
+    stack: LinkedList<dyn ValType>
+}
+
+struct CtrlFrame {
+    opcode: u8,
+    start_types: Vec<dyn ValType>,
+    end_types: Vec<dyn ValType>,
+    height: usize,
+    unreachable: bool
 }

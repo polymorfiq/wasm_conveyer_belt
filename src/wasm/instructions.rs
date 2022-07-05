@@ -254,7 +254,7 @@ pub(super) struct VecI8x16SubSatU {a: VecI8x16}
 pub(super) struct VecI8x16SubSatS {a: VecI8x16}
 
 // VecI16x8 Instructions
-pub(super) struct VecI16x8Splat {a: I128}
+pub(super) struct VecI16x8Splat {a: u128}
 pub(super) struct VecI16x8ExtractLaneU {a: VecI16x8, b: LaneIdx}
 pub(super) struct VecI16x8ExtractLaneS {a: VecI16x8, b: LaneIdx}
 pub(super) struct VecI16x8ReplaceLane {a: VecI16x8, b: LaneIdx}
@@ -314,7 +314,7 @@ pub(super) struct VecI16x8ExtAddPairwiseI8x16U {a: VecI8x16}
 pub(super) struct VecI16x8ExtAddPairwiseI8x16S {a: VecI8x16}
 
 // VecI32x4 Instructions
-pub(super) struct VecI32x4Splat {a: I128}
+pub(super) struct VecI32x4Splat {a: u128}
 pub(super) struct VecI32x4ExtractLane {a: VecI32x4, b: LaneIdx}
 pub(super) struct VecI32x4ReplaceLane {a: VecI32x4, b: LaneIdx}
 pub(super) struct VecI32x4Bitmask {a: VecI32x4}
@@ -368,7 +368,7 @@ pub(super) struct VecI32x4TruncSatF64x2UZero {a: VecF64x2}
 pub(super) struct VecI32x4TruncSatF64x2SZero {a: VecF64x2}
 
 // VecI64x2 Instructions
-pub(super) struct VecI64x2Splat {a: I128}
+pub(super) struct VecI64x2Splat {a: u128}
 pub(super) struct VecI64x2ExtractLane {a: VecI64x2, b: LaneIdx}
 pub(super) struct VecI64x2ReplaceLane {a: VecI64x2, b: LaneIdx}
 pub(super) struct VecI64x2Bitmask {a: VecI64x2}
@@ -405,7 +405,7 @@ pub(super) struct VecI64x2ExtMulHalfI32x4U {a: VecI32x4}
 pub(super) struct VecI64x2ExtMulHalfI32x4S {a: VecI32x4}
 
 // VecF32x4 Instructions
-pub(super) struct VecF32x4Splat {a: I128}
+pub(super) struct VecF32x4Splat {a: u128}
 pub(super) struct VecF32x4ExtractLane {a: VecF32x4, b: LaneIdx}
 pub(super) struct VecF32x4ReplaceLane {a: VecF32x4, b: LaneIdx}
 
@@ -442,7 +442,7 @@ pub(super) struct VecF32x4ConvertI32x4S {a: VecI32x4}
 pub(super) struct VecF32x4DemoteF64x2Zero {a: VecF64x2}
 
 // VecF64x2 Instructions
-pub(super) struct VecF64x2Splat {a: I128}
+pub(super) struct VecF64x2Splat {a: u128}
 pub(super) struct VecF64x2ExtractLane {a: VecF64x2, b: LaneIdx}
 pub(super) struct VecF64x2ReplaceLane {a: VecF64x2, b: LaneIdx}
 

@@ -1,53 +1,120 @@
 use super::expressions::Expr;
 
-pub(super) trait ValType {}
-impl ValType for dyn NumType {}
-impl ValType for dyn VecType {}
-impl ValType for dyn RefType {}
+#[derive(Clone, Copy)]
+pub(super) enum ValTypes {
+    I8,
+    I16,
+    I32,
+    I64,
+    F32,
+    F64,
+    V128,
+    AnyNum,
+    FuncRef,
+    ExternRef,
+    AnyRef,
+    Vec128,
+    VecI8x16,
+    VecI16x8,
+    VecI32x4,
+    VecI64x2,
+    VecF32x4,
+    VecF64x2,
+    AnyVec,
+    Unknown
+}
+pub(super) trait ValType {
+    fn is_type(&self, t: ValTypes) -> bool;
+}
+
+impl ValType for dyn NumType {
+    fn is_type(&self, t: ValTypes) -> bool {
+        match t {
+            ValTypes::AnyNum => true,
+            ValTypes::Unknown => true,
+            _ => self.is_type(t)
+        }
+    }
+}
+impl ValType for dyn VecType {
+    fn is_type(&self, t: ValTypes) -> bool {
+        match t {
+            ValTypes::AnyVec => true,
+            ValTypes::Unknown => true,
+            _ => self.is_type(t)
+        }
+    }
+}
+impl ValType for dyn RefType {
+    fn is_type(&self, t: ValTypes) -> bool {
+        match t {
+            ValTypes::AnyRef => true,
+            ValTypes::Unknown => true,
+            _ => self.is_type(t)
+        }
+    }
+}
 
 pub(super) trait ResultType {}
-impl ResultType for [& dyn ValType] {}
+impl ResultType for [ValTypes] {}
 
 // Num Types
-pub(super) trait NumType {}
-impl NumType for U8 {}
-impl NumType for I8 {}
-impl NumType for I16 {}
-impl NumType for I32 {}
-impl NumType for U32 {}
-impl NumType for I64 {}
-impl NumType for I128 {}
-impl NumType for F32 {}
-impl NumType for F64 {}
+pub(super) trait NumType {
+    fn is_type(&self, t: ValTypes) -> bool;
+}
+impl NumType for I8 {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::I8) }
+}
+impl NumType for I16 {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::I16) }
+}
+impl NumType for I32 {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::I32) }
+}
+impl NumType for I64 {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::I64) }
+}
+impl NumType for F32 {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::F32) }
+}
+impl NumType for F64 {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::F64) }
+}
 
-pub(super) struct U8 {data: u8}
 pub(super) struct I8 {data: u8}
 pub(super) struct I16 {data: u16}
 pub(super) struct I32 {data: u32}
-pub(super) struct U32 {data: u32}
 pub(super) struct I64 {data: u64}
-pub(super) struct I128 {data: u128}
 pub(super) struct F32 {data: f32}
 pub(super) struct F64 {data: f64}
 
 // Reference Types
-pub(super) trait RefType {}
-impl RefType for FuncRef {}
-impl RefType for ExternRef {}
+pub(super) trait RefType {
+    fn is_type(&self, t: ValTypes) -> bool;
+}
+impl RefType for FuncRef {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::FuncRef) }
+}
+impl RefType for ExternRef {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::ExternRef) }
+}
 
 pub(super) struct FuncRef {idx: TableIdx}
 pub(super) struct ExternRef {idx: TableIdx}
 
 // Vector Types
 pub(super) trait VecType {
+    fn is_type(&self, t: ValTypes) -> bool;
     fn bits(&self) -> u128;
 }
 
 impl VecType for Vec128 {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::Vec128) }
     fn bits(&self) -> u128 { self.data }
 }
 
 impl VecType for VecI8x16 {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::VecI8x16) }
     fn bits(&self) -> u128 {
         ((self.data[0] as u128) << 120) +
         ((self.data[1] as u128) << 112) +
@@ -69,6 +136,7 @@ impl VecType for VecI8x16 {
 }
 
 impl VecType for VecI16x8 {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::VecI16x8) }
     fn bits(&self) -> u128 {
         ((self.data[0] as u128) << 112) +
         ((self.data[1] as u128) << 96) +
@@ -82,6 +150,7 @@ impl VecType for VecI16x8 {
 }
 
 impl VecType for VecI32x4 {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::VecI32x4) }
     fn bits(&self) -> u128 {
         ((self.data[0] as u128) << 96) +
         ((self.data[1] as u128) << 64) +
@@ -91,6 +160,7 @@ impl VecType for VecI32x4 {
 }
 
 impl VecType for VecI64x2 {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::VecI64x2) }
     fn bits(&self) -> u128 {
         ((self.data[0] as u128) << 64) +
         ((self.data[1] as u128) << 0)
@@ -98,6 +168,7 @@ impl VecType for VecI64x2 {
 }
 
 impl VecType for VecF32x4 {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::VecF32x4) }
     fn bits(&self) -> u128 {
         ((self.data[0] as u128) << 96) +
         ((self.data[1] as u128) << 64) +
@@ -107,6 +178,7 @@ impl VecType for VecF32x4 {
 }
 
 impl VecType for VecF64x2 {
+    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::VecF64x2) }
     fn bits(&self) -> u128 {
         ((self.data[0] as u128) << 64) +
         ((self.data[1] as u128) << 0)
@@ -122,19 +194,19 @@ pub(super) struct VecF32x4 {data: [f32; 4]}
 pub(super) struct VecF64x2 {data: [f64; 2]}
 
 // Index Types
-pub(super) struct Byte {data: U8}
-pub(super) struct LaneIdx {data: U8}
-pub(super) struct TypeIdx {data: U32}
-pub(super) struct FuncIdx {data: U32}
-pub(super) struct TableIdx {data: U32}
-pub(super) struct MemIdx {data: U32}
-pub(super) struct GlobalIdx {data: U32}
-pub(super) struct ElemIdx {data: U32}
-pub(super) struct DataIdx {data: U32}
-pub(super) struct LocalIdx {data: U32}
-pub(super) struct LabelIdx {data: U32}
-pub(super) struct Offset {data: U32}
-pub(super) struct Align {data: U32}
+pub(super) struct Byte {data: u8}
+pub(super) struct LaneIdx {data: u8}
+pub(super) struct TypeIdx {data: u32}
+pub(super) struct FuncIdx {data: u32}
+pub(super) struct TableIdx {data: u32}
+pub(super) struct MemIdx {data: u32}
+pub(super) struct GlobalIdx {data: u32}
+pub(super) struct ElemIdx {data: u32}
+pub(super) struct DataIdx {data: u32}
+pub(super) struct LocalIdx {data: u32}
+pub(super) struct LabelIdx {data: u32}
+pub(super) struct Offset {data: u32}
+pub(super) struct Align {data: u32}
 
 pub(super) trait BlockType {}
 impl BlockType for Option<& dyn ValType> {}
@@ -248,3 +320,9 @@ impl ExportDesc for FuncIdx {}
 impl ExportDesc for TableIdx {}
 impl ExportDesc for MemIdx {}
 impl ExportDesc for GlobalIdx {}
+
+// OpCode Types
+#[derive(Clone, Copy)]
+pub(super) enum OpCode {
+    Loop
+}
