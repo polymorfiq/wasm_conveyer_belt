@@ -102,17 +102,17 @@ pub(super) enum FuncType {
     Func(Vec<ValType>, Vec<ValType>)
 }
 
-pub(super) struct Func {
+pub(super) struct Func<'a> {
     pub func_type: TypeIdx,
     pub locals: Vec<ValType>,
-    pub body: Expr,
+    pub body: Expr<'a>,
 }
 
 // Table Types
 pub(super) struct TableType {limits: Limits, reftype: RefType}
 pub(super) struct Table {table_type: TableType}
 
-pub(super) struct Elem {elem_type: RefType, init: Vec<Expr>, mode: ElemMode}
+pub(super) struct Elem<'a> {elem_type: RefType, init: Vec<Expr<'a>>, mode: ElemMode}
 pub(super) enum ElemMode {
     Passive,
     Active(TableIdx, Offset),

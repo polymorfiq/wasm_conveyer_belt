@@ -1,3 +1,3 @@
 use super::instructions::*;
 
-pub(super) type Expr = Vec<dyn Instr>;
+pub(super) struct Expr<'a> {a: Vec<&'a dyn Instr>}
