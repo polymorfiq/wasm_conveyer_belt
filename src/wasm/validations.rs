@@ -1,29 +1,37 @@
 use super::types::*;
+use super::modules::Module;
 
-struct Validator {
-    vals: Vec<ValTypes>,
+pub(super) struct Validator {
+    pub(super) module: Module,
+    vals: Vec<ValType>,
     ctrls: Vec<CtrlFrame>,
 }
 
 #[derive(Clone)]
-struct CtrlFrame {
+pub(super) struct CtrlFrame {
     opcode: OpCode,
-    start_types: Vec<ValTypes>,
-    end_types: Vec<ValTypes>,
+    start_types: Vec<ValType>,
+    end_types: Vec<ValType>,
     height: usize,
     unreachable: bool
 }
 
-impl<'a> Validator {
-    pub fn push_val(&mut self, val: ValTypes) {
+fn validator<'a>() -> Validator {
+    Validator{
+        module: Module::new(),
+        vals: Vec::new(),
+        ctrls: Vec::new()
+    }
+}
+
+impl Validator {
+    pub fn push_val(&mut self, val: ValType) {
         self.vals.push(val);
     }
 
-    pub fn pop_val(&mut self) -> ValTypes {
-        if self.ctrls.len() == 0 { panic!("ctrls.len() == 0") }
-
+    pub fn pop_next_val(&mut self) -> ValType {
         if self.vals.len() == self.ctrls[0].height && self.ctrls[0].unreachable {
-            return ValTypes::Unknown;
+            return ValType::Unknown;
         } else if self.vals.len() == self.ctrls[0].height {
             panic!("vals.size() == ctrls[0].height")
         } else {
@@ -34,35 +42,35 @@ impl<'a> Validator {
         }
     }
 
-    pub fn pop_val_expect(&mut self, expect: ValTypes) -> ValTypes {
-        let actual = self.pop_val();
+    pub fn pop_val(&mut self, expect: ValType) -> ValType {
+        let actual = self.pop_next_val();
 
-        if matches!(actual, expect) || matches!(actual, ValTypes::Unknown) || matches!(expect, ValTypes::Unknown) {
+        if matches!(actual, expect) || matches!(actual, ValType::Unknown) || matches!(expect, ValType::Unknown) {
             actual
         } else {
             panic!("actual != expect")
         }
     }
 
-    pub fn push_vals(&mut self, vals: Vec<ValTypes>) {
+    pub fn push_vals(&mut self, vals: Vec<ValType>) {
         for val in vals {
             self.push_val(val)
         }
     }
 
-    pub fn pop_vals(&mut self, vals: Vec<ValTypes>) -> Vec<ValTypes> {
-        let mut ret_vals: Vec<ValTypes> = Vec::new();
+    pub fn pop_vals(&mut self, vals: Vec<ValType>) -> Vec<ValType> {
+        let mut ret_vals: Vec<ValType> = Vec::new();
         for val in vals {
-            ret_vals.push(self.pop_val_expect(val))
+            ret_vals.push(self.pop_val(val))
         }
 
         return ret_vals
     }
 
-    pub fn push_ctrl(&mut self, opcode: OpCode, inputs: Vec<ValTypes>, outputs: Vec<ValTypes>) {
+    pub fn push_ctrl(&mut self, opcode: OpCode, inputs: Vec<ValType>, outputs: Vec<ValType>) {
         let frame = CtrlFrame{
             opcode: opcode,
-            start_types: inputs.clone(),
+            start_types: inputs,
             end_types: outputs,
             height: self.vals.len(),
             unreachable: false
@@ -73,14 +81,9 @@ impl<'a> Validator {
     }
 
     pub fn pop_ctrl(&mut self) -> CtrlFrame {
-        if self.ctrls.len() == 0 {
-            panic!("ctrls.len() == 0")
-        }
-
-        let frame = self.ctrls[0].clone();
-        self.pop_vals(frame.end_types.clone());
+        self.pop_vals(self.ctrls[0].end_types);
         
-        if self.vals.len() != frame.height {
+        if self.vals.len() != self.ctrls[0].height {
             panic!("vals.len() != frame.height")
         }
 
@@ -90,7 +93,7 @@ impl<'a> Validator {
         }
     }
 
-    pub fn label_types(frame: CtrlFrame) -> Vec<ValTypes> {
+    pub fn label_types(frame: CtrlFrame) -> Vec<ValType> {
         if matches!(frame.opcode, OpCode::Loop) {
             return frame.start_types;
         } else {
@@ -99,11 +102,9 @@ impl<'a> Validator {
     }
 
     pub fn unreachable(&mut self) {
-        if self.ctrls.len() == 0 { panic!("ctrls.len() == 0") }
-
         loop {
             if self.vals.len() > self.ctrls[0].height {
-                self.pop_val();
+                self.pop_next_val();
             } else {
                 break;
             }

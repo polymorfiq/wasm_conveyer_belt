@@ -1,4 +1,4 @@
 pub mod types;
+pub mod modules;
 pub mod instructions;
-pub mod expressions;
-pub mod validation;
+pub mod validations;

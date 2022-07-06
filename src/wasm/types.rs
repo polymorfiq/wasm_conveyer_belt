@@ -1,7 +1,7 @@
-use super::expressions::Expr;
+use super::instructions::Expr;
 
 #[derive(Clone, Copy)]
-pub(super) enum ValTypes {
+pub(super) enum ValType {
     I8,
     I16,
     I32,
@@ -21,64 +21,111 @@ pub(super) enum ValTypes {
     VecF32x4,
     VecF64x2,
     AnyVec,
+    Any,
     Unknown
 }
-pub(super) trait ValType {
-    fn is_type(&self, t: ValTypes) -> bool;
+impl ValType {
+    pub fn is_num(self) -> bool {
+        match self {
+            ValType::AnyNum => true,
+            ValType::I8 => true,
+            ValType::I16 => true,
+            ValType::I32 => true,
+            ValType::I64 => true,
+            ValType::F32 => true,
+            ValType::F64 => true,
+            ValType::Unknown => true,
+            _ => false
+        }
+    }
+
+    pub fn is_vec(self) -> bool {
+        match self {
+            ValType::AnyVec => true,
+            ValType::Vec128 => true,
+            ValType::VecI8x16 => true,
+            ValType::VecI16x8 => true,
+            ValType::VecI32x4 => true,
+            ValType::VecI64x2 => true,
+            ValType::VecF32x4 => true,
+            ValType::VecF64x2 => true,
+            ValType::Unknown => true,
+            _ => false
+        }
+    }
+
+    pub fn is_ref(self) -> bool {
+        match self {
+            ValType::AnyRef => true,
+            ValType::FuncRef => true,
+            ValType::ExternRef => true,
+            ValType::Unknown => true,
+            _ => false
+        }
+    }
 }
 
-impl ValType for dyn NumType {
-    fn is_type(&self, t: ValTypes) -> bool {
+pub(super) trait Val {
+    fn is_type(&self, t: ValType) -> bool;
+}
+
+impl Val for dyn NumType {
+    fn is_type(&self, t: ValType) -> bool {
         match t {
-            ValTypes::AnyNum => true,
-            ValTypes::Unknown => true,
+            ValType::Any => true,
+            ValType::AnyNum => true,
+            ValType::Unknown => true,
             _ => self.is_type(t)
         }
     }
 }
-impl ValType for dyn VecType {
-    fn is_type(&self, t: ValTypes) -> bool {
+impl Val for dyn VecType {
+    fn is_type(&self, t: ValType) -> bool {
         match t {
-            ValTypes::AnyVec => true,
-            ValTypes::Unknown => true,
+            ValType::Any => true,
+            ValType::AnyVec => true,
+            ValType::Unknown => true,
             _ => self.is_type(t)
         }
     }
 }
-impl ValType for dyn RefType {
-    fn is_type(&self, t: ValTypes) -> bool {
+impl Val for RefType {
+    fn is_type(&self, t: ValType) -> bool {
         match t {
-            ValTypes::AnyRef => true,
-            ValTypes::Unknown => true,
-            _ => self.is_type(t)
+            ValType::Any => true,
+            ValType::AnyRef => true,
+            ValType::Unknown => true,
+            ValType::FuncRef => matches!(self, RefType::FuncRef(_)),
+            ValType::ExternRef => matches!(self, RefType::ExternRef(_)),
+            _ => false
         }
     }
 }
 
 pub(super) trait ResultType {}
-impl ResultType for [ValTypes] {}
+impl ResultType for [ValType] {}
 
 // Num Types
 pub(super) trait NumType {
-    fn is_type(&self, t: ValTypes) -> bool;
+    fn is_type(&self, t: ValType) -> bool;
 }
 impl NumType for I8 {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::I8) }
+    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::I8) }
 }
 impl NumType for I16 {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::I16) }
+    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::I16) }
 }
 impl NumType for I32 {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::I32) }
+    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::I32) }
 }
 impl NumType for I64 {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::I64) }
+    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::I64) }
 }
 impl NumType for F32 {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::F32) }
+    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::F32) }
 }
 impl NumType for F64 {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::F64) }
+    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::F64) }
 }
 
 pub(super) struct I8 {data: u8}
@@ -89,32 +136,24 @@ pub(super) struct F32 {data: f32}
 pub(super) struct F64 {data: f64}
 
 // Reference Types
-pub(super) trait RefType {
-    fn is_type(&self, t: ValTypes) -> bool;
+pub(super) enum RefType {
+    FuncRef(TableIdx),
+    ExternRef(TableIdx),
 }
-impl RefType for FuncRef {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::FuncRef) }
-}
-impl RefType for ExternRef {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::ExternRef) }
-}
-
-pub(super) struct FuncRef {idx: TableIdx}
-pub(super) struct ExternRef {idx: TableIdx}
 
 // Vector Types
 pub(super) trait VecType {
-    fn is_type(&self, t: ValTypes) -> bool;
+    fn is_type(&self, t: ValType) -> bool;
     fn bits(&self) -> u128;
 }
 
 impl VecType for Vec128 {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::Vec128) }
+    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::Vec128) }
     fn bits(&self) -> u128 { self.data }
 }
 
 impl VecType for VecI8x16 {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::VecI8x16) }
+    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::VecI8x16) }
     fn bits(&self) -> u128 {
         ((self.data[0] as u128) << 120) +
         ((self.data[1] as u128) << 112) +
@@ -136,7 +175,7 @@ impl VecType for VecI8x16 {
 }
 
 impl VecType for VecI16x8 {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::VecI16x8) }
+    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::VecI16x8) }
     fn bits(&self) -> u128 {
         ((self.data[0] as u128) << 112) +
         ((self.data[1] as u128) << 96) +
@@ -150,7 +189,7 @@ impl VecType for VecI16x8 {
 }
 
 impl VecType for VecI32x4 {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::VecI32x4) }
+    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::VecI32x4) }
     fn bits(&self) -> u128 {
         ((self.data[0] as u128) << 96) +
         ((self.data[1] as u128) << 64) +
@@ -160,7 +199,7 @@ impl VecType for VecI32x4 {
 }
 
 impl VecType for VecI64x2 {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::VecI64x2) }
+    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::VecI64x2) }
     fn bits(&self) -> u128 {
         ((self.data[0] as u128) << 64) +
         ((self.data[1] as u128) << 0)
@@ -168,7 +207,7 @@ impl VecType for VecI64x2 {
 }
 
 impl VecType for VecF32x4 {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::VecF32x4) }
+    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::VecF32x4) }
     fn bits(&self) -> u128 {
         ((self.data[0] as u128) << 96) +
         ((self.data[1] as u128) << 64) +
@@ -178,7 +217,7 @@ impl VecType for VecF32x4 {
 }
 
 impl VecType for VecF64x2 {
-    fn is_type(&self, t: ValTypes) -> bool { matches!(t, ValTypes::VecF64x2) }
+    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::VecF64x2) }
     fn bits(&self) -> u128 {
         ((self.data[0] as u128) << 64) +
         ((self.data[1] as u128) << 0)
@@ -194,23 +233,24 @@ pub(super) struct VecF32x4 {data: [f32; 4]}
 pub(super) struct VecF64x2 {data: [f64; 2]}
 
 // Index Types
-pub(super) struct Byte {data: u8}
-pub(super) struct LaneIdx {data: u8}
-pub(super) struct TypeIdx {data: u32}
-pub(super) struct FuncIdx {data: u32}
-pub(super) struct TableIdx {data: u32}
-pub(super) struct MemIdx {data: u32}
-pub(super) struct GlobalIdx {data: u32}
-pub(super) struct ElemIdx {data: u32}
-pub(super) struct DataIdx {data: u32}
-pub(super) struct LocalIdx {data: u32}
-pub(super) struct LabelIdx {data: u32}
-pub(super) struct Offset {data: u32}
-pub(super) struct Align {data: u32}
+pub(super) type Byte = u8;
+pub(super) type LaneIdx = u8;
+pub(super) type TypeIdx = u32;
+pub(super) type FuncIdx = u32;
+pub(super) type TableIdx = u32;
+pub(super) type MemIdx = u32;
+pub(super) type GlobalIdx = u32;
+pub(super) type ElemIdx = u32;
+pub(super) type DataIdx = u32;
+pub(super) type LocalIdx = u32;
+pub(super) type LabelIdx = u32;
+pub(super) type Offset = u32;
+pub(super) type Align = u32;
 
-pub(super) trait BlockType {}
-impl BlockType for Option<& dyn ValType> {}
-impl BlockType for TypeIdx {}
+pub(super) enum BlockType {
+    TypeIdx(TypeIdx),
+    ValType(Option<ValType>)
+}
 
 // Limits
 pub(super) struct Limits {
@@ -219,51 +259,25 @@ pub(super) struct Limits {
 }
 
 // Memory Types
-pub(super) trait MemType {
-    fn limits(&self) -> &Limits;
-}
-
-pub(super) struct Mem {limits: Limits}
-impl MemType for Mem {
-    fn limits(&self) -> &Limits { &self.limits }
-}
+pub(super) struct MemType {limits: Limits}
 
 // Function Types
 pub(super) struct Start {
     pub func: FuncIdx
 }
 
-pub(super) trait FuncType {
-    fn inputs(&self) -> & [& dyn ValType];
-    fn returns(&self) -> & [& dyn ValType];
-}
+pub(super) struct FuncType {pub inputs: Vec<ValType>, pub returns: Vec<ValType>}
 
-pub(super) struct Func<'a> {
+pub(super) struct Func {
     func_type: TypeIdx,
-    locals: &'a [&'a dyn ValType],
-    body: Expr<'a>,
-    inputs: &'a [&'a dyn ValType],
-    returns: &'a [&'a dyn ValType]
-}
-impl FuncType for Func<'_> {
-    fn inputs(&self) -> & [&'_ dyn ValType] { self.inputs }
-    fn returns(&self) -> & [&'_ dyn ValType] { self.returns }
+    locals: Vec<ValType>,
+    body: Expr
 }
 
 // Table Types
-pub(super) trait TableType {
-    fn limits(&self) -> &Limits;
-    fn reftype(&self) -> &dyn RefType;
-}
+pub(super) struct TableType {limits: Limits, reftype: RefType}
 
-impl TableType for Table {
-    fn limits(&self) -> &Limits { &self.limits }
-    fn reftype(&self) -> &dyn RefType { &self.reftype }
-}
-
-pub(super) struct Table {limits: Limits, reftype: dyn RefType}
-
-pub(super) struct Elem<'a> {elem_type: &'a dyn RefType, init: &'a [Expr<'a>], mode: ElemMode}
+pub(super) struct Elem {reftype: RefType, init: Vec<Expr>, mode: ElemMode}
 pub(super) enum ElemMode {
     Passive,
     Active(TableIdx, Offset),
@@ -282,47 +296,50 @@ pub(super) enum DataMode {
 }
 
 // Global Types
-pub(super) struct ConstGlobal<'a> {val: &'a mut dyn ValType}
-pub(super) struct VarGlobal {val: dyn ValType}
+pub(super) enum GlobalType {
+    Var,
+    Const
+}
 
-pub(super) trait GlobalType {}
-impl GlobalType for ConstGlobal<'_> {}
-impl GlobalType for VarGlobal {}
+pub(super) struct Global {globaltype: GlobalType, valtype: ValType}
 
 // External Types
 pub(super) trait ExternType {}
-impl ExternType for dyn FuncType {}
-impl ExternType for dyn TableType {}
-impl ExternType for dyn MemType {}
-impl ExternType for dyn GlobalType {}
+impl ExternType for Func {}
+impl ExternType for TableType {}
+impl ExternType for MemType {}
 
 // Import Types
-pub(super) struct Import<'a> {
-    module: &'a str,
-    name: &'a str,
-    desc: dyn ImportDesc
+pub(super) struct Import {
+    module: String,
+    name: String,
+    desc: ImportDesc
 }
 
-pub(super) trait ImportDesc {}
-impl ImportDesc for dyn FuncType {}
-impl ImportDesc for dyn TableType {}
-impl ImportDesc for dyn MemType {}
-impl ImportDesc for dyn GlobalType {}
+pub(super) enum ImportDesc {
+    Func(TypeIdx),
+    Table(TableType),
+    Mem(MemType),
+    Global(GlobalType)
+}
 
 // Export Types
-pub(super) struct Export<'a> {
-    name: &'a str,
-    desc: dyn ExportDesc
+pub(super) struct Export {
+    name: String,
+    desc: ExportDesc
 }
 
-pub(super) trait ExportDesc {}
-impl ExportDesc for FuncIdx {}
-impl ExportDesc for TableIdx {}
-impl ExportDesc for MemIdx {}
-impl ExportDesc for GlobalIdx {}
+pub(super) enum ExportDesc {
+    Func(FuncIdx),
+    Table(TableIdx),
+    Mem(MemIdx),
+    Global(GlobalIdx)
+}
 
 // OpCode Types
 #[derive(Clone, Copy)]
 pub(super) enum OpCode {
-    Loop
+    Block,
+    Loop,
+    If
 }
