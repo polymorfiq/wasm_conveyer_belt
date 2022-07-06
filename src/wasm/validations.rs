@@ -1,9 +1,10 @@
 use super::types::*;
 use super::instructions::OpCode;
-use super::modules::Module;
+use super::modules::{Context, Module};
 
 pub(super) struct Validator {
     pub(super) module: Module,
+    pub(super) ctx: Context,
     pub vals: Vec<ValType>,
     pub ctrls: Vec<CtrlFrame>,
 }
@@ -20,6 +21,7 @@ pub(super) struct CtrlFrame {
 fn validator<'a>() -> Validator {
     Validator{
         module: Module::new(),
+        ctx: Context::new(),
         vals: Vec::new(),
         ctrls: Vec::new()
     }

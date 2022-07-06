@@ -419,10 +419,11 @@ pub(super) enum Instr {
     //
     // Reference Instructions
     //
-    FuncRefNull(),
-    FuncRef(RefType),
-    ExternRefNull(),
-    ExternRef(RefType),
+    RefIsNull(),
+    RefFunc(FuncIdx),
+    FuncRef(TableIdx),
+    RefNull(ValType),
+    ExternRef(TableIdx),
 
     //
     // Parametric Instructions
@@ -537,6 +538,9 @@ pub(super) enum OpCode {
 
 impl Instr {
     pub fn validate(&self, v: &mut Validator) {
+        let mut validated = false;
+        validated = validated || self.validate_numeric(v);
+
         match *self {
             Unreachable => v.unreachable(),
             Drop => { v.pop_val(ValType::Any); },
@@ -552,7 +556,7 @@ impl Instr {
 
                 v.push_ctrl(OpCode::Else, frame.start_types, frame.end_types);
             }
-
+            
             Instr::Select(None) => {
                 v.pop_val(ValType::I32);
                 let t1 = v.pop_val(ValType::Any);
@@ -637,5 +641,191 @@ impl Instr {
                 v.unreachable()
             }
         };
+    }
+
+    fn validate_numeric(&self, v: &Validator) -> bool {
+        let mut skipped = false;
+
+        use Instr::*;
+        use ValType::*;
+        match *self {
+            // t.const
+            I32Const(n) => { v.push_val(I32); },
+            I64Const(n) => { v.push_val(I64); },
+            F32Const(n) => { v.push_val(F32); },
+            F64Const(n) => { v.push_val(F64); },
+
+            // t.unop
+            I32Clz(n) => { v.pop_val(I32); v.push_val(I32); },
+            I32Ctz(n) => { v.pop_val(I32); v.push_val(I32); },
+            I32PopCnt(n) => { v.pop_val(I32); v.push_val(I32); },
+            I64Clz(n) => { v.pop_val(I64); v.push_val(I64); },
+            I64Ctz(n) => { v.pop_val(I64); v.push_val(I64); },
+            I64PopCnt(n) => { v.pop_val(I64); v.push_val(I64); },
+            F32Abs(n) => { v.pop_val(F32); v.push_val(F32); },
+            F32Neg(n) => { v.pop_val(F32); v.push_val(F32); },
+            F32Sqrt(n) => { v.pop_val(F32); v.push_val(F32); },
+            F32Ceil(n) => { v.pop_val(F32); v.push_val(F32); },
+            F32Floor(n) => { v.pop_val(F32); v.push_val(F32); },
+            F32Trunc(n) => { v.pop_val(F32); v.push_val(F32); },
+            F32Nearest(n) => { v.pop_val(F32); v.push_val(F32); },
+            F64Abs(n) => { v.pop_val(F64); v.push_val(F64); },
+            F64Neg(n) => { v.pop_val(F64); v.push_val(F64); },
+            F64Sqrt(n) => { v.pop_val(F64); v.push_val(F64); },
+            F64Ceil(n) => { v.pop_val(F64); v.push_val(F64); },
+            F64Floor(n) => { v.pop_val(F64); v.push_val(F64); },
+            F64Trunc(n) => { v.pop_val(F64); v.push_val(F64); },
+            F64Nearest(n) => { v.pop_val(F64); v.push_val(F64); },
+
+            // t.binop
+            I32Add(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32Sub(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32Mul(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32DivU(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32DivS(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32RemU(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32RemS(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I64Add(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
+            I64Sub(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
+            I64Mul(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
+            I64DivU(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
+            I64DivS(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
+            I64RemU(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
+            I64RemS(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
+            F32Add(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
+            F32Sub(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
+            F32Mul(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
+            F32Div(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
+            F32Min(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
+            F32Max(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
+            F32Copysign(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
+            F64Add(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
+            F64Sub(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
+            F64Mul(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
+            F64Div(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
+            F64Min(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
+            F64Max(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
+            F64Copysign(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
+
+            // t.testop
+            I32Eqz(n) => { v.pop_val(I32); v.push_val(I32); },
+            I64Eqz(n) => { v.pop_val(I64); v.push_val(I32); },
+
+            // t.relop
+            I32Eq(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32Ne(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32LtU(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32LtS(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32GtU(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32GtS(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32LeU(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32LeS(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32GeU(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); }
+            I32GeS(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I64Eq(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64Ne(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64LtU(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64LtS(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64GtU(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64GtS(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64LeU(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64LeS(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64GeU(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64GeS(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            F32Eq(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
+            F32Ne(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
+            F32Lt(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
+            F32Gt(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
+            F32Le(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
+            F32Ge(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
+            F64Eq(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
+            F64Ne(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
+            F64Lt(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
+            F64Gt(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
+            F64Le(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
+            F64Ge(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
+
+            // t.cvtop_t1_sx
+            I32Extend8S(n) => { v.pop_val(I8); v.push_val(I32); },
+            I32Extend16S(n) => { v.pop_val(I16); v.push_val(I32); },
+            I32WrapI64(n) => { v.pop_val(I64); v.push_val(I32); },
+            I32TruncF32U(n) => { v.pop_val(F32); v.push_val(I32); },
+            I32TruncF32S(n) => { v.pop_val(F32); v.push_val(I32); },
+            I32TruncF64U(n) => { v.pop_val(F64); v.push_val(I32); },
+            I32TruncF64S(n) => { v.pop_val(F64); v.push_val(I32); },
+            I32TruncSatF32U(n) => { v.pop_val(F32); v.push_val(I32); },
+            I32TruncSatF32S(n) => { v.pop_val(F32); v.push_val(I32); },
+            I32TruncSatF64U(n) => { v.pop_val(F64); v.push_val(I32); },
+            I32TruncSatF64S(n) => { v.pop_val(F64); v.push_val(I32); },
+            I32ReinterpretF32(n) => { v.pop_val(F32); v.push_val(I32); },
+            I64Extend8S(n) => { v.pop_val(I8); v.push_val(I64); },
+            I64Extend16S(n) => { v.pop_val(I16); v.push_val(I64); },
+            I64Extend32S(n) => { v.pop_val(I32); v.push_val(I64); },
+            I64ExtendI32U(n) => { v.pop_val(I32); v.push_val(I64); },
+            I64ExtendI32S(n) => { v.pop_val(I32); v.push_val(I64); },
+            I64TruncF32U(n) => { v.pop_val(F32); v.push_val(I64); },
+            I64TruncF32S(n) => { v.pop_val(F32); v.push_val(I64); },
+            I64TruncF64U(n) => { v.pop_val(F64); v.push_val(I64); },
+            I64TruncF64S(n) => { v.pop_val(F64); v.push_val(I64); },
+            I64TruncSatF32U(n) => { v.pop_val(F32); v.push_val(I64); },
+            I64TruncSatF32S(n) => { v.pop_val(F32); v.push_val(I64); },
+            I64TruncSatF64U(n) => { v.pop_val(F64); v.push_val(I64); },
+            I64TruncSatF64S(n) => { v.pop_val(F64); v.push_val(I64); },
+            I64ReinterpretF64(n) => { v.pop_val(F64); v.push_val(I64); },
+            F32DemoteF64(n) => { v.pop_val(F64); v.push_val(F32); },
+            F32ConvertI32U(n) => { v.pop_val(I32); v.push_val(F32); },
+            F32ConvertI32S(n) => { v.pop_val(I32); v.push_val(F32); },
+            F32ConvertI64U(n) => { v.pop_val(I64); v.push_val(F32); },
+            F32ConvertI64S(n) => { v.pop_val(I64); v.push_val(F32); },
+            F32ReinterpretI32(n) => { v.pop_val(I32); v.push_val(F32); },
+            F32ReinterpretI64(n) => { v.pop_val(I64); v.push_val(F32); },
+            F64PromoteF32(n) => { v.pop_val(I64); v.push_val(F64); },
+            F64ConvertI32U(n) => { v.pop_val(I32); v.push_val(F64); },
+            F64ConvertI32S(n) => { v.pop_val(I32); v.push_val(F64); },
+            F64ConvertI64U(n) => { v.pop_val(I64); v.push_val(F64); },
+            F64ConvertI64S(n) => { v.pop_val(I64); v.push_val(F64); },
+            F64ReinterpretI32(n) => { v.pop_val(I32); v.push_val(F64); },
+            F64ReinterpretI64(n) => { v.pop_val(I64); v.push_val(F64); },
+
+            _ => { skipped = true; }
+        }
+
+        !skipped
+    }
+
+    fn validate_reference(&self, v: &Validator) -> bool {
+        let mut skipped = false;
+
+        use Instr::*;
+        use ValType::*;
+        match *self {
+            RefNull(ValType::FuncRef) => { v.push_val(ValType::FuncRef); },
+            RefNull(ValType::ExternRef) => { v.push_val(ValType::ExternRef); },
+            RefIsNull() => {
+                let val = v.pop_val(Any);
+                
+                if val.is_ref() {
+                    v.push_val(I32)
+                } else {
+                    panic!("RefIsNull: expected funcref or externref, got {:?}", val)
+                }
+            },
+
+            RefFunc(funcidx) => {
+                if v.ctx.funcs.len() <= funcidx {
+                    panic!("RefFunc: C.funcs - index {} out of bounds", funcidx)
+                }
+
+                if v.ctx.refs.contains(&funcidx) {
+                    panic!("RefFunc: C.refs - does not contain funcidx ({})", funcidx)
+                }
+
+                v.push_val(ValType::FuncRef);
+            }
+
+            _ => { skipped = true; }
+        }
+
+        !skipped
     }
 }

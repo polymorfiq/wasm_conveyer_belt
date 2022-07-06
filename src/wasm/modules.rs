@@ -13,14 +13,6 @@ pub struct Module {
     exports: Vec<Export>,
 }
 
-struct CtrlFrame {
-    opcode: u8,
-    start_types: Vec<ValType>,
-    end_types: Vec<ValType>,
-    height: usize,
-    unreachable: bool
-}
-
 impl Module {
     pub fn new() -> Module {
         Module {
@@ -47,5 +39,45 @@ impl Module {
             }
         }
         
+    }
+}
+
+struct CtrlFrame {
+    opcode: u8,
+    start_types: Vec<ValType>,
+    end_types: Vec<ValType>,
+    height: usize,
+    unreachable: bool
+}
+
+pub(super) struct Context {
+    pub types: Vec<FuncType>,
+    pub funcs: Vec<FuncType>,
+    pub tables: Vec<TableType>,
+    pub mems: Vec<MemType>,
+    pub globals: Vec<GlobalType>,
+    pub elems: Vec<RefType>,
+    pub datas: Vec<u8>,
+    pub locals: Vec<ValType>,
+    pub labels: Vec<ResultType>,
+    pub returns: Option<ResultType>,
+    pub refs: Vec<FuncIdx>,
+}
+
+impl Context {
+    pub fn new() -> Context {
+        Context {
+            types: vec![],
+            funcs: vec![],
+            tables: vec![],
+            mems: vec![],
+            globals: vec![],
+            elems: vec![],
+            datas: vec![],
+            locals: vec![],
+            labels: vec![],
+            returns: vec![],
+            refs: vec![],
+        }
     }
 }

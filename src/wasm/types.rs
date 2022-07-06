@@ -1,6 +1,6 @@
 use super::instructions::Expr;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, std::fmt::Debug)]
 pub(super) enum ValType {
     I8,
     I16,
@@ -10,7 +10,9 @@ pub(super) enum ValType {
     F64,
     V128,
     AnyNum,
+    NullFuncRef,
     FuncRef,
+    NullExternRef,
     ExternRef,
     AnyRef,
     Vec128,
@@ -57,7 +59,9 @@ impl ValType {
     pub fn is_ref(self) -> bool {
         match self {
             ValType::AnyRef => true,
+            ValType::NullFuncRef => true,
             ValType::FuncRef => true,
+            ValType::NullExternRef => true,
             ValType::ExternRef => true,
             ValType::Unknown => true,
             _ => false
@@ -95,15 +99,14 @@ impl Val for RefType {
             ValType::Any => true,
             ValType::AnyRef => true,
             ValType::Unknown => true,
-            ValType::FuncRef => matches!(self, RefType::FuncRef(_)),
-            ValType::ExternRef => matches!(self, RefType::ExternRef(_)),
+            ValType::FuncRef => matches!(self, RefType::Ref(ValType::FuncRef, _)) || matches!(self, RefType::NullRef(ValType::FuncRef)),
+            ValType::ExternRef => matches!(self, RefType::Ref(ValType::ExternRef, _)) || matches!(self, RefType::NullRef(ValType::ExternRef)),
             _ => false
         }
     }
 }
 
-pub(super) trait ResultType {}
-impl ResultType for [ValType] {}
+pub(super) type ResultType = Vec<ValType>;
 
 // Num Types
 pub(super) trait NumType {
@@ -137,8 +140,8 @@ pub(super) struct F64 {data: f64}
 
 // Reference Types
 pub(super) enum RefType {
-    FuncRef(TableIdx),
-    ExternRef(TableIdx),
+    NullRef(ValType),
+    Ref(ValType, TableIdx),
 }
 
 // Vector Types
