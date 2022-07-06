@@ -511,24 +511,47 @@ pub(super) enum Instr {
     //
     Nop,
     Unreachable,
+    Return,
+    End,
+    Else,
     Loop(BlockType, Vec<Instr>),
     Block(BlockType, Vec<Instr>),
     If(BlockType, Vec<Instr>, Vec<Instr>),
     Br(LabelIdx),
     BrIf(LabelIdx),
     BrTable(Vec<LabelIdx>, LabelIdx),
-    Return,
     Call(FuncIdx),
     CallIndirect(TableIdx, TypeIdx),
 }
 
+// OpCode Types
 pub(super) type Expr = Vec<Instr>;
+
+#[derive(Clone, Copy)]
+pub(super) enum OpCode {
+    Block,
+    Loop,
+    If,
+    Else
+}
 
 impl Instr {
     pub fn validate(&self, v: &mut Validator) {
         match *self {
             Unreachable => v.unreachable(),
             Drop => { v.pop_val(ValType::Any); },
+            End => {
+                let frame = v.pop_ctrl();
+                v.push_vals(frame.end_types);
+            }
+            Else => {
+                let frame = v.pop_ctrl();
+                if !matches!(frame.opcode, OpCode::If) {
+                    panic!("else must follow if");
+                }
+
+                v.push_ctrl(OpCode::Else, frame.start_types, frame.end_types);
+            }
 
             Instr::Select(None) => {
                 v.pop_val(ValType::I32);
@@ -561,6 +584,58 @@ impl Instr {
                 v.push_ctrl(OpCode::Block, func_type.inputs, func_type.returns);
             }
 
+            Instr::Loop(blocktype, instrs) => {
+                let func_type = v.module.get_block_type(blocktype);
+                v.pop_vals(func_type.inputs);
+                v.push_ctrl(OpCode::Loop, func_type.inputs, func_type.returns);
+            }
+
+            Instr::If(blocktype, then_instrs, else_instrs) => {
+                let func_type = v.module.get_block_type(blocktype);
+                v.pop_val(ValType::I32);
+                v.pop_vals(func_type.inputs);
+                v.push_ctrl(OpCode::If, func_type.inputs, func_type.returns);
+            }
+
+            Instr::Br(idx) => {
+                if v.ctrls.len() <= idx {
+                    panic!("branch out of range");
+                }
+
+                v.pop_vals(v.label_types(v.ctrls[idx]));
+                v.unreachable()
+            }
+
+            Instr::BrIf(idx) => {
+                if v.ctrls.len() <= idx {
+                    panic!("branch_if out of range");
+                }
+
+                v.pop_val(ValType::I32);
+                v.pop_vals(v.label_types(v.ctrls[idx]));
+                v.push_vals(v.label_types(v.ctrls[idx]));
+            }
+
+            Instr::BrTable(indices, m) => {
+                v.pop_val(ValType::I32);
+                if v.ctrls.len() <= m {
+                    panic!("branch_table out of range");
+                }
+
+                let arity = v.label_types(v.ctrls[m]).len();
+                for n in indices {
+                    if v.ctrls.len() <= n {
+                        panic!("branch_table out of range");
+                    } else if v.label_types(v.ctrls[n]).len() != arity {
+                        panic!("branch_table: label types must match");
+                    }
+
+                    v.push_vals(v.pop_vals(v.label_types(v.ctrls[n])));
+                }
+
+                v.pop_vals(v.label_types(v.ctrls[m]));
+                v.unreachable()
+            }
         };
     }
 }

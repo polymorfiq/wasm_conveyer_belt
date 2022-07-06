@@ -39,7 +39,7 @@ impl Module {
 
     pub fn get_block_type(&self, blocktype: BlockType) -> FuncType {
         match blocktype {
-            BlockType::TypeIdx(typeidx) => vec![self.types[typeidx as usize]],
+            BlockType::TypeIdx(typeidx) => vec![self.types[typeidx]],
             BlockType::ValType(None) => FuncType{inputs: Vec::new(), returns: Vec::new()},
             BlockType::ValType(Some(valtype)) => FuncType {
                 inputs: vec![valtype],

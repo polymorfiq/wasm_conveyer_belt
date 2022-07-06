@@ -1,17 +1,18 @@
 use super::types::*;
+use super::instructions::OpCode;
 use super::modules::Module;
 
 pub(super) struct Validator {
     pub(super) module: Module,
-    vals: Vec<ValType>,
-    ctrls: Vec<CtrlFrame>,
+    pub vals: Vec<ValType>,
+    pub ctrls: Vec<CtrlFrame>,
 }
 
 #[derive(Clone)]
 pub(super) struct CtrlFrame {
-    opcode: OpCode,
-    start_types: Vec<ValType>,
-    end_types: Vec<ValType>,
+    pub opcode: OpCode,
+    pub start_types: Vec<ValType>,
+    pub end_types: Vec<ValType>,
     height: usize,
     unreachable: bool
 }
@@ -93,7 +94,7 @@ impl Validator {
         }
     }
 
-    pub fn label_types(frame: CtrlFrame) -> Vec<ValType> {
+    pub fn label_types(&self, frame: CtrlFrame) -> Vec<ValType> {
         if matches!(frame.opcode, OpCode::Loop) {
             return frame.start_types;
         } else {

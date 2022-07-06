@@ -235,17 +235,17 @@ pub(super) struct VecF64x2 {data: [f64; 2]}
 // Index Types
 pub(super) type Byte = u8;
 pub(super) type LaneIdx = u8;
-pub(super) type TypeIdx = u32;
-pub(super) type FuncIdx = u32;
-pub(super) type TableIdx = u32;
-pub(super) type MemIdx = u32;
-pub(super) type GlobalIdx = u32;
-pub(super) type ElemIdx = u32;
-pub(super) type DataIdx = u32;
-pub(super) type LocalIdx = u32;
-pub(super) type LabelIdx = u32;
-pub(super) type Offset = u32;
-pub(super) type Align = u32;
+pub(super) type TypeIdx = usize;
+pub(super) type FuncIdx = usize;
+pub(super) type TableIdx = usize;
+pub(super) type MemIdx = usize;
+pub(super) type GlobalIdx = usize;
+pub(super) type ElemIdx = usize;
+pub(super) type DataIdx = usize;
+pub(super) type LocalIdx = usize;
+pub(super) type LabelIdx = usize;
+pub(super) type Offset = usize;
+pub(super) type Align = usize;
 
 pub(super) enum BlockType {
     TypeIdx(TypeIdx),
@@ -334,12 +334,4 @@ pub(super) enum ExportDesc {
     Table(TableIdx),
     Mem(MemIdx),
     Global(GlobalIdx)
-}
-
-// OpCode Types
-#[derive(Clone, Copy)]
-pub(super) enum OpCode {
-    Block,
-    Loop,
-    If
 }
