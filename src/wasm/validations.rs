@@ -63,8 +63,8 @@ impl Validator {
 
     pub fn pop_vals(&mut self, vals: Vec<ValType>) -> Vec<ValType> {
         let mut ret_vals: Vec<ValType> = Vec::new();
-        for val in vals {
-            ret_vals.push(self.pop_val(val))
+        for val in vals.iter().rev() {
+            ret_vals.push(self.pop_val(*val))
         }
 
         return ret_vals

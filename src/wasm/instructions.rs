@@ -8,428 +8,426 @@ pub(super) enum Instr {
     // I32 Instructions
     I32Const(u32),
     // I32 Unary Operations
-    I32Clz(I32),
-    I32Ctz(I32),
-    I32PopCnt(I32),
+    I32Clz,
+    I32Ctz,
+    I32PopCnt,
     // I32 Binary Operations
-    I32Add(I32, I32),
-    I32Sub(I32, I32),
-    I32Mul(I32, I32),
-    I32DivU(I32, I32),
-    I32DivS(I32, I32),
-    I32RemU(I32, I32),
-    I32RemS(I32, I32),
+    I32Add,
+    I32Sub,
+    I32Mul,
+    I32DivU,
+    I32DivS,
+    I32RemU,
+    I32RemS,
     // I32 Test Operations
-    I32Eqz(I32),
+    I32Eqz,
     // I32 Comparison Operations
-    I32Eq(I32, I32),
-    I32Ne(I32, I32),
-    I32LtU(I32, I32),
-    I32LtS(I32, I32),
-    I32GtU(I32, I32),
-    I32GtS(I32, I32),
-    I32LeU(I32, I32),
-    I32LeS(I32, I32),
-    I32GeU(I32, I32),
-    I32GeS(I32, I32),
+    I32Eq,
+    I32Ne,
+    I32LtU,
+    I32LtS,
+    I32GtU,
+    I32GtS,
+    I32LeU,
+    I32LeS,
+    I32GeU,
+    I32GeS,
     // I32 Convert Operations
-    I32Extend8S(I32),
-    I32Extend16S(I32),
-    I32WrapI64(I64),
-    I32TruncF32U(F32),
-    I32TruncF32S(F32),
-    I32TruncF64U(F64),
-    I32TruncF64S(F64),
-    I32TruncSatF32U(F32),
-    I32TruncSatF32S(F32),
-    I32TruncSatF64U(F64),
-    I32TruncSatF64S(F64),
-    I32ReinterpretF32(F32),
+    I32Extend8S,
+    I32Extend16S,
+    I32WrapI64,
+    I32TruncF32U,
+    I32TruncF32S,
+    I32TruncF64U,
+    I32TruncF64S,
+    I32TruncSatF32U,
+    I32TruncSatF32S,
+    I32TruncSatF64U,
+    I32TruncSatF64S,
+    I32ReinterpretF32,
 
     // I64 Instructions
     I64Const(u64),
     // I64 Unary Operations
-    I64Clz(I64),
-    I64Ctz(I64),
-    I64PopCnt(I64),
+    I64Clz,
+    I64Ctz,
+    I64PopCnt,
     // I64 Binary Operations
-    I64Add(I64, I64),
-    I64Sub(I64, I64),
-    I64Mul(I64, I64),
-    I64DivU(I64, I64),
-    I64DivS(I64, I64),
-    I64RemU(I64, I64),
-    I64RemS(I64, I64),
+    I64Add,
+    I64Sub,
+    I64Mul,
+    I64DivU,
+    I64DivS,
+    I64RemU,
+    I64RemS,
     // I64 Test Operations
-    I64Eqz(I64),
+    I64Eqz,
     // I64 Comparison Operations
-    I64Eq(I64, I64),
-    I64Ne(I64, I64),
-    I64LtU(I64, I64),
-    I64LtS(I64, I64),
-    I64GtU(I64, I64),
-    I64GtS(I64, I64),
-    I64LeU(I64, I64),
-    I64LeS(I64, I64),
-    I64GeU(I64, I64),
-    I64GeS(I64, I64),
+    I64Eq,
+    I64Ne,
+    I64LtU,
+    I64LtS,
+    I64GtU,
+    I64GtS,
+    I64LeU,
+    I64LeS,
+    I64GeU,
+    I64GeS,
     // I64 Convert Operations
-    I64Extend8S(I32),
-    I64Extend16S(I32),
-    I64Extend32S(I32),
-    I64ExtendI32U(I32),
-    I64ExtendI32S(I32),
-    I64TruncF32U(F32),
-    I64TruncF32S(F32),
-    I64TruncF64U(F64),
-    I64TruncF64S(F64),
-    I64TruncSatF32U(F32),
-    I64TruncSatF32S(F32),
-    I64TruncSatF64U(F64),
-    I64TruncSatF64S(F64),
-    I64ReinterpretF64(F64),
+    I64Extend8S,
+    I64Extend16S,
+    I64Extend32S,
+    I64ExtendI32U,
+    I64ExtendI32S,
+    I64TruncF32U,
+    I64TruncF32S,
+    I64TruncF64U,
+    I64TruncF64S,
+    I64TruncSatF32U,
+    I64TruncSatF32S,
+    I64TruncSatF64U,
+    I64TruncSatF64S,
+    I64ReinterpretF64,
 
     // F32 Instructions
     F32Const(f32),
     // F32 Unary Operations
-    F32Abs(F32),
-    F32Neg(F32),
-    F32Sqrt(F32),
-    F32Ceil(F32),
-    F32Floor(F32),
-    F32Trunc(F32),
-    F32Nearest(F32),
+    F32Abs,
+    F32Neg,
+    F32Sqrt,
+    F32Ceil,
+    F32Floor,
+    F32Trunc,
+    F32Nearest,
     // F32 Binary Operations
-    F32Add(F32, F32),
-    F32Sub(F32, F32),
-    F32Mul(F32, F32),
-    F32Div(F32, F32),
-    F32Min(F32, F32),
-    F32Max(F32, F32),
-    F32Copysign(F32, F32),
+    F32Add,
+    F32Sub,
+    F32Mul,
+    F32Div,
+    F32Min,
+    F32Max,
+    F32Copysign,
     // F32 Comparison Operations
-    F32Eq(F32, F32),
-    F32Ne(F32, F32),
-    F32Lt(F32, F32),
-    F32Gt(F32, F32),
-    F32Le(F32, F32),
-    F32Ge(F32, F32),
+    F32Eq,
+    F32Ne,
+    F32Lt,
+    F32Gt,
+    F32Le,
+    F32Ge,
     // F32 Convert Operations
-    F32DemoteF64(F64),
-    F32ConvertI32U(I32),
-    F32ConvertI32S(I32),
-    F32ConvertI64U(I64),
-    F32ConvertI64S(I64),
-    F32ReinterpretI32(I32),
-    F32ReinterpretI64(I64),
+    F32DemoteF64,
+    F32ConvertI32U,
+    F32ConvertI32S,
+    F32ConvertI64U,
+    F32ConvertI64S,
+    F32ReinterpretI32,
+    F32ReinterpretI64,
 
     // F64 Instructions
     F64Const(f64),
     // F64 Unary Operations
-    F64Abs(F64),
-    F64Neg(F64),
-    F64Sqrt(F64),
-    F64Ceil(F64),
-    F64Floor(F64),
-    F64Trunc(F64),
-    F64Nearest(F64),
+    F64Abs,
+    F64Neg,
+    F64Sqrt,
+    F64Ceil,
+    F64Floor,
+    F64Trunc,
+    F64Nearest,
     // F64 Binary Operations
-    F64Add(F64, F64),
-    F64Sub(F64, F64),
-    F64Mul(F64, F64),
-    F64Div(F64, F64),
-    F64Min(F64, F64),
-    F64Max(F64, F64),
-    F64Copysign(F64, F64),
+    F64Add,
+    F64Sub,
+    F64Mul,
+    F64Div,
+    F64Min,
+    F64Max,
+    F64CopySign,
     // F64 Comparison Operations
-    F64Eq(F64, F64),
-    F64Ne(F64, F64),
-    F64Lt(F64, F64),
-    F64Gt(F64, F64),
-    F64Le(F64, F64),
-    F64Ge(F64, F64),
+    F64Eq,
+    F64Ne,
+    F64Lt,
+    F64Gt,
+    F64Le,
+    F64Ge,
     // F64 Convert Operations
-    F64PromoteF32(F32),
-    F64ConvertI32U(I32),
-    F64ConvertI32S(I32),
-    F64ConvertI64U(I64),
-    F64ConvertI64S(I64),
-    F64ReinterpretI32(I32),
-    F64ReinterpretI64(I64),
+    F64PromoteF32,
+    F64ConvertI32U,
+    F64ConvertI32S,
+    F64ConvertI64U,
+    F64ConvertI64S,
+    F64ReinterpretI32,
+    F64ReinterpretI64,
 
     //
     // Vector Instructions
     //
-    // Vec128 Instructions
-    Vec128Const(u128),
-    // Vec128 Unary Operations
-    Vec128Not(Vec128),
-    // Vec128 Binary Operations
-    Vec128And(Vec128, Vec128),
-    Vec128AndNot(Vec128, Vec128),
-    Vec128Or(Vec128, Vec128),
-    Vec128Xor(Vec128, Vec128),
-    // Vec128 Comparison Operations
-    Vec128Bitselect(Vec128, Vec128, Vec128),
-    // Vec128 Test Operations
-    Vec128AnyTrue(Vec128),
+    // V128 Instructions
+    V128Const(u128),
+    // V128 Unary Operations
+    V128Not,
+    // V128 Binary Operations
+    V128And,
+    V128AndNot,
+    V128Or,
+    V128Xor,
+    // V128 Ternary Operations
+    V128Bitselect,
+    // V128 Test Operations
+    V128AnyTrue,
 
     // VecI8x16 Instructions
-    VecI8x16Shuffle(VecI8x16),
-    VecI8x16Swizzle(VecI8x16),
-    VecI8x16Splat(u128),
-    VecI8x16ExtractLaneU(VecI8x16, LaneIdx),
-    VecI8x16ExtractLaneS(VecI8x16, LaneIdx),
-    VecI8x16ReplaceLane(VecI8x16, LaneIdx),
-    VecI8x16Bitmask(VecI8x16),
-    VecI8x16NarrowI16x8U(VecI8x16),
-    VecI8x16NarrowI16x8S(VecI8x16),
+    VecI8x16Shuffle([LaneIdx; 16]),
+    VecI8x16Swizzle,
+    VecI8x16Splat,
+    VecI8x16ExtractLaneU(LaneIdx),
+    VecI8x16ExtractLaneS(LaneIdx),
+    VecI8x16ReplaceLane(LaneIdx),
+    VecI8x16Bitmask,
+    VecI8x16NarrowI16x8U,
+    VecI8x16NarrowI16x8S,
     // VecI8x16 Unary Operations
-    VecI8x16Abs(VecI8x16),
-    VecI8x16Neg(VecI8x16),
-    VecI8x16PopCnt(VecI8x16),
+    VecI8x16Abs,
+    VecI8x16Neg,
+    VecI8x16PopCnt,
     // VecI8x16 Binary Operations
-    VecI8x16Add(VecI8x16, VecI8x16),
-    VecI8x16Sub(VecI8x16, VecI8x16),
-    VecI8x16AvgrU(VecI8x16, VecI8x16),
+    VecI8x16Add,
+    VecI8x16Sub,
+    VecI8x16AvgrU,
     // VecI8x16 Compare Operations
-    VecI8x16Eq(VecI8x16, VecI8x16),
-    VecI8x16Ne(VecI8x16, VecI8x16),
-    VecI8x16LtU(VecI8x16, VecI8x16),
-    VecI8x16LtS(VecI8x16, VecI8x16),
-    VecI8x16GtU(VecI8x16, VecI8x16),
-    VecI8x16GtS(VecI8x16, VecI8x16),
-    VecI8x16LeU(VecI8x16, VecI8x16),
-    VecI8x16LeS(VecI8x16, VecI8x16),
-    VecI8x16GeU(VecI8x16, VecI8x16),
-    VecI8x16GeS(VecI8x16, VecI8x16),
+    VecI8x16Eq,
+    VecI8x16Ne,
+    VecI8x16LtU,
+    VecI8x16LtS,
+    VecI8x16GtU,
+    VecI8x16GtS,
+    VecI8x16LeU,
+    VecI8x16LeS,
+    VecI8x16GeU,
+    VecI8x16GeS,
     // VecI8x16 Test Operations
-    VecI8x16AllTrue(VecI8x16),
+    VecI8x16AllTrue,
     // VecI8x16 Shift Operations
-    VecI8x16Shl(VecI8x16, I32),
-    VecI8x16ShrU(VecI8x16, I32),
-    VecI8x16ShrS(VecI8x16, I32),
+    VecI8x16Shl,
+    VecI8x16ShrU,
+    VecI8x16ShrS,
     // VecI8x16 MinMax Operations
-    VecI8x16MinU(VecI8x16, VecI8x16),
-    VecI8x16MinS(VecI8x16, VecI8x16),
-    VecI8x16MaxU(VecI8x16, VecI8x16),
-    VecI8x16MaxS(VecI8x16, VecI8x16),
+    VecI8x16MinU,
+    VecI8x16MinS,
+    VecI8x16MaxU,
+    VecI8x16MaxS,
     // VecI8x16 Sat Binary Operations
-    VecI8x16AddSatU(VecI8x16),
-    VecI8x16AddSatS(VecI8x16),
-    VecI8x16SubSatU(VecI8x16),
-    VecI8x16SubSatS(VecI8x16),
+    VecI8x16AddSatU,
+    VecI8x16AddSatS,
+    VecI8x16SubSatU,
+    VecI8x16SubSatS,
 
     // VecI16x8 Instructions
-    VecI16x8Splat(u128),
-    VecI16x8ExtractLaneU(VecI16x8, LaneIdx),
-    VecI16x8ExtractLaneS(VecI16x8, LaneIdx),
-    VecI16x8ReplaceLane(VecI16x8, LaneIdx),
-    VecI16x8Bitmask(VecI16x8),
-    VecI16x8NarrowI32x4U(VecI16x8),
-    VecI16x8NarrowI32x4S(VecI16x8),
+    VecI16x8Splat,
+    VecI16x8ExtractLaneU(LaneIdx),
+    VecI16x8ExtractLaneS(LaneIdx),
+    VecI16x8ReplaceLane(LaneIdx),
+    VecI16x8Bitmask,
+    VecI16x8NarrowI32x4U,
+    VecI16x8NarrowI32x4S,
     // VecI16x8 Unary Operations
-    VecI16x8Abs(VecI16x8),
-    VecI16x8Neg(VecI16x8),
+    VecI16x8Abs,
+    VecI16x8Neg,
     // VecI16x8 Binary Operations
-    VecI16x8Add(VecI16x8, VecI16x8),
-    VecI16x8Sub(VecI16x8, VecI16x8),
-    VecI16x8Mul(VecI16x8, VecI16x8),
-    VecI16x8AvgrU(VecI16x8, VecI16x8),
-    VecI16x8Q15MulrSatS(VecI16x8, VecI16x8),
+    VecI16x8Add,
+    VecI16x8Sub,
+    VecI16x8Mul,
+    VecI16x8AvgrU,
+    VecI16x8Q15MulrSatS,
     // VecI16x8 Test Operations
-    VecI16x8AllTrue(VecI16x8),
+    VecI16x8AllTrue,
     // VecI16x8 Compare Operations
-    VecI16x8Eq(VecI16x8, VecI16x8),
-    VecI16x8Ne(VecI16x8, VecI16x8),
-    VecI16x8LtU(VecI16x8, VecI16x8),
-    VecI16x8LtS(VecI16x8, VecI16x8),
-    VecI16x8GtU(VecI16x8, VecI16x8),
-    VecI16x8GtS(VecI16x8, VecI16x8),
-    VecI16x8LeU(VecI16x8, VecI16x8),
-    VecI16x8LeS(VecI16x8, VecI16x8),
-    VecI16x8GeU(VecI16x8, VecI16x8),
-    VecI16x8GeS(VecI16x8, VecI16x8),
+    VecI16x8Eq,
+    VecI16x8Ne,
+    VecI16x8LtU,
+    VecI16x8LtS,
+    VecI16x8GtU,
+    VecI16x8GtS,
+    VecI16x8LeU,
+    VecI16x8LeS,
+    VecI16x8GeU,
+    VecI16x8GeS,
     // VecI16x8 Shift Operations
-    VecI16x8Shl(VecI16x8, I32),
-    VecI16x8ShrU(VecI16x8, I32),
-    VecI16x8ShrS(VecI16x8, I32),
+    VecI16x8Shl,
+    VecI16x8ShrU,
+    VecI16x8ShrS,
     // VecI16x8 MinMax Operations
-    VecI16x8MinU(VecI16x8, VecI16x8),
-    VecI16x8MinS(VecI16x8, VecI16x8),
-    VecI16x8MaxU(VecI16x8, VecI16x8),
-    VecI16x8MaxS(VecI16x8, VecI16x8),
+    VecI16x8MinU,
+    VecI16x8MinS,
+    VecI16x8MaxU,
+    VecI16x8MaxS,
     // VecI16x8 Sat Binary Operations
-    VecI16x8AddSatU(VecI16x8),
-    VecI16x8AddSatS(VecI16x8),
-    VecI16x8SubSatU(VecI16x8),
-    VecI16x8SubSatS(VecI16x8),
+    VecI16x8AddSatU,
+    VecI16x8AddSatS,
+    VecI16x8SubSatU,
+    VecI16x8SubSatS,
     // Vec16x8 Convert Operations
-    VecI16x8ExtendHalfI8x16U(VecI8x16),
-    VecI16x8ExtendHalfI8x16S(VecI8x16),
-    VecI16x8ExtMulHalfI8x16U(VecI8x16),
-    VecI16x8ExtMulHalfI8x16S(VecI8x16),
-    VecI16x8ExtAddPairwiseI8x16U(VecI8x16),
-    VecI16x8ExtAddPairwiseI8x16S(VecI8x16),
+    VecI16x8ExtendHalfI8x16U,
+    VecI16x8ExtendHalfI8x16S,
+    VecI16x8ExtMulHalfI8x16U,
+    VecI16x8ExtMulHalfI8x16S,
+    VecI16x8ExtAddPairwiseI8x16U,
+    VecI16x8ExtAddPairwiseI8x16S,
 
     // VecI32x4 Instructions
-    VecI32x4Splat(u128),
-    VecI32x4ExtractLane(VecI32x4, LaneIdx),
-    VecI32x4ReplaceLane(VecI32x4, LaneIdx),
-    VecI32x4Bitmask(VecI32x4),
-    VecI32x4DotI16x8S(VecI16x8),
+    VecI32x4Splat,
+    VecI32x4ExtractLane(LaneIdx),
+    VecI32x4ReplaceLane(LaneIdx),
+    VecI32x4Bitmask,
+    VecI32x4DotI16x8S,
     // VecI32x4 Unary Operations
-    VecI32x4Abs(VecI32x4),
-    VecI32x4Neg(VecI32x4),
+    VecI32x4Abs,
+    VecI32x4Neg,
     // VecI32x4 Binary Operations
-    VecI32x4Add(VecI32x4, VecI32x4),
-    VecI32x4Sub(VecI32x4, VecI32x4),
-    VecI32x4Mul(VecI32x4, VecI32x4),
+    VecI32x4Add,
+    VecI32x4Sub,
+    VecI32x4Mul,
     // VecI32x4 Test Operations
-    VecI32x4AllTrue(VecI32x4),
+    VecI32x4AllTrue,
     // VecI32x4 Compare Operations
-    VecI32x4Eq(VecI32x4, VecI32x4),
-    VecI32x4Ne(VecI32x4, VecI32x4),
-    VecI32x4LtU(VecI32x4, VecI32x4),
-    VecI32x4LtS(VecI32x4, VecI32x4),
-    VecI32x4GtU(VecI32x4, VecI32x4),
-    VecI32x4GtS(VecI32x4, VecI32x4),
-    VecI32x4LeU(VecI32x4, VecI32x4),
-    VecI32x4LeS(VecI32x4, VecI32x4),
-    VecI32x4GeU(VecI32x4, VecI32x4),
-    VecI32x4GeS(VecI32x4, VecI32x4),
+    VecI32x4Eq,
+    VecI32x4Ne,
+    VecI32x4LtU,
+    VecI32x4LtS,
+    VecI32x4GtU,
+    VecI32x4GtS,
+    VecI32x4LeU,
+    VecI32x4LeS,
+    VecI32x4GeU,
+    VecI32x4GeS,
     // VecI32x4 Shift Operations
-    VecI32x4Shl(VecI32x4, I32),
-    VecI32x4ShrU(VecI32x4, I32),
-    VecI32x4ShrS(VecI32x4, I32),
+    VecI32x4Shl,
+    VecI32x4ShrU,
+    VecI32x4ShrS,
     // VecI32x4 MinMax Operations
-    VecI32x4MinU(VecI32x4, VecI32x4),
-    VecI32x4MinS(VecI32x4, VecI32x4),
-    VecI32x4MaxU(VecI32x4, VecI32x4),
-    VecI32x4MaxS(VecI32x4, VecI32x4),
+    VecI32x4MinU,
+    VecI32x4MinS,
+    VecI32x4MaxU,
+    VecI32x4MaxS,
     // VecI32x4 Convert Operations
-    VecI32x4ExtendHalfI16x8U(VecI16x8),
-    VecI32x4ExtendHalfI16x8S(VecI16x8),
-    VecI32x4ExtMulHalfI16x8U(VecI16x8),
-    VecI32x4ExtMulHalfI16x8S(VecI16x8),
-    VecI32x4ExtAddPairwiseI16x8U(VecI16x8),
-    VecI32x4ExtAddPairwiseI16x8S(VecI16x8),
-    VecI32x4TruncSatF32x4U(VecF32x4),
-    VecI32x4TruncSatF32x4S(VecF32x4),
-    VecI32x4TruncSatF64x2UZero(VecF64x2),
-    VecI32x4TruncSatF64x2SZero(VecF64x2),
+    VecI32x4ExtendHalfI16x8U,
+    VecI32x4ExtendHalfI16x8S,
+    VecI32x4ExtMulHalfI16x8U,
+    VecI32x4ExtMulHalfI16x8S,
+    VecI32x4ExtAddPairwiseI16x8U,
+    VecI32x4ExtAddPairwiseI16x8S,
+    VecI32x4TruncSatF32x4U,
+    VecI32x4TruncSatF32x4S,
+    VecI32x4TruncSatF64x2UZero,
+    VecI32x4TruncSatF64x2SZero,
 
     // VecI64x2 Instructions
-    VecI64x2Splat(u128),
-    VecI64x2ExtractLane(VecI64x2, LaneIdx),
-    VecI64x2ReplaceLane(VecI64x2, LaneIdx),
-    VecI64x2Bitmask(VecI64x2),
+    VecI64x2Splat,
+    VecI64x2ExtractLane(LaneIdx),
+    VecI64x2ReplaceLane(LaneIdx),
+    VecI64x2Bitmask,
     // VecI64x2 Unary Operations
-    VecI64x2Abs(VecI64x2),
-    VecI64x2Neg(VecI64x2),
+    VecI64x2Abs,
+    VecI64x2Neg,
     // VecI64x2 Binary Operations
-    VecI64x2Add(VecI64x2, VecI64x2),
-    VecI64x2Sub(VecI64x2, VecI64x2),
-    VecI64x2Mul(VecI64x2, VecI64x2),
+    VecI64x2Add,
+    VecI64x2Sub,
+    VecI64x2Mul,
     // VecI64x2 Test Operations
-    VecI64x2AllTrue(VecI64x2),
+    VecI64x2AllTrue,
     // VecI64x2 Compare Operations
-    VecI64x2Eq(VecI64x2, VecI64x2),
-    VecI64x2Ne(VecI64x2, VecI64x2),
-    VecI64x2LtS(VecI64x2, VecI64x2),
-    VecI64x2GtS(VecI64x2, VecI64x2),
-    VecI64x2LeS(VecI64x2, VecI64x2),
-    VecI64x2GeS(VecI64x2, VecI64x2),
+    VecI64x2Eq,
+    VecI64x2Ne,
+    VecI64x2LtS,
+    VecI64x2GtS,
+    VecI64x2LeS,
+    VecI64x2GeS,
     // VecI64x2 Shift Operations
-    VecI64x2Shl(VecI64x2, I32),
-    VecI64x2ShrU(VecI64x2, I32),
-    VecI64x2ShrS(VecI64x2, I32),
+    VecI64x2Shl,
+    VecI64x2ShrU,
+    VecI64x2ShrS,
     // VecI64x2 Convert Operations
-    VecI64x2ExtendHalfI32x4U(VecI32x4),
-    VecI64x2ExtendHalfI32x4S(VecI32x4),
-    VecI64x2ExtMulHalfI32x4U(VecI32x4),
-    VecI64x2ExtMulHalfI32x4S(VecI32x4),
+    VecI64x2ExtendHalfI32x4U,
+    VecI64x2ExtendHalfI32x4S,
+    VecI64x2ExtMulHalfI32x4U,
+    VecI64x2ExtMulHalfI32x4S,
 
     // VecF32x4 Instructions
-    VecF32x4Splat(u128),
-    VecF32x4ExtractLane(VecF32x4, LaneIdx),
-    VecF32x4ReplaceLane(VecF32x4, LaneIdx),
+    VecF32x4Splat,
+    VecF32x4ExtractLane(LaneIdx),
+    VecF32x4ReplaceLane(LaneIdx),
     // VecF32x4 Unary Operations
-    VecF32x4Abs(VecF32x4),
-    VecF32x4Neg(VecF32x4),
-    VecF32x4Sqrt(VecF32x4),
-    VecF32x4Ceil(VecF32x4),
-    VecF32x4Floor(VecF32x4),
-    VecF32x4Trunc(VecF32x4),
-    VecF32x4Nearest(VecF32x4),
+    VecF32x4Abs,
+    VecF32x4Neg,
+    VecF32x4Sqrt,
+    VecF32x4Ceil,
+    VecF32x4Floor,
+    VecF32x4Trunc,
+    VecF32x4Nearest,
     // VecF32x4 Binary Operations
-    VecF32x4Add(VecF32x4, VecF32x4),
-    VecF32x4Sub(VecF32x4, VecF32x4),
-    VecF32x4Mul(VecF32x4, VecF32x4),
-    VecF32x4Div(VecF32x4, VecF32x4),
-    VecF32x4Min(VecF32x4, VecF32x4),
-    VecF32x4Max(VecF32x4, VecF32x4),
-    VecF32x4PMin(VecF32x4, VecF32x4),
-    VecF32x4PMax(VecF32x4, VecF32x4),
+    VecF32x4Add,
+    VecF32x4Sub,
+    VecF32x4Mul,
+    VecF32x4Div,
+    VecF32x4Min,
+    VecF32x4Max,
+    VecF32x4PMin,
+    VecF32x4PMax,
     // VecF32x4 Compare Operations
-    VecF32x4Eq(VecF32x4, VecF32x4),
-    VecF32x4Ne(VecF32x4, VecF32x4),
-    VecF32x4Lt(VecF32x4, VecF32x4),
-    VecF32x4Gt(VecF32x4, VecF32x4),
-    VecF32x4Le(VecF32x4, VecF32x4),
-    VecF32x4Ge(VecF32x4, VecF32x4),
+    VecF32x4Eq,
+    VecF32x4Ne,
+    VecF32x4Lt,
+    VecF32x4Gt,
+    VecF32x4Le,
+    VecF32x4Ge,
     // VecF32x4 Convert Operations
-    VecF32x4ConvertI32x4U(VecI32x4),
-    VecF32x4ConvertI32x4S(VecI32x4),
-    VecF32x4DemoteF64x2Zero(VecF64x2),
+    VecF32x4ConvertI32x4U,
+    VecF32x4ConvertI32x4S,
+    VecF32x4DemoteF64x2Zero,
 
     // VecF64x2 Instructions
-    VecF64x2Splat(u128),
-    VecF64x2ExtractLane(VecF64x2, LaneIdx),
-    VecF64x2ReplaceLane(VecF64x2, LaneIdx),
+    VecF64x2Splat,
+    VecF64x2ExtractLane(LaneIdx),
+    VecF64x2ReplaceLane(LaneIdx),
     // VecF64x2 Unary Operations
-    VecF64x2Abs(VecF64x2),
-    VecF64x2Neg(VecF64x2),
-    VecF64x2Sqrt(VecF64x2),
-    VecF64x2Ceil(VecF64x2),
-    VecF64x2Floor(VecF64x2),
-    VecF64x2Trunc(VecF64x2),
-    VecF64x2Nearest(VecF64x2),
+    VecF64x2Abs,
+    VecF64x2Neg,
+    VecF64x2Sqrt,
+    VecF64x2Ceil,
+    VecF64x2Floor,
+    VecF64x2Trunc,
+    VecF64x2Nearest,
     // VecF64x2 Binary Operations
-    VecF64x2Add(VecF64x2, VecF64x2),
-    VecF64x2Sub(VecF64x2, VecF64x2),
-    VecF64x2Mul(VecF64x2, VecF64x2),
-    VecF64x2Div(VecF64x2, VecF64x2),
-    VecF64x2Min(VecF64x2, VecF64x2),
-    VecF64x2Max(VecF64x2, VecF64x2),
-    VecF64x2PMin(VecF64x2, VecF64x2),
-    VecF64x2PMax(VecF64x2, VecF64x2),
+    VecF64x2Add,
+    VecF64x2Sub,
+    VecF64x2Mul,
+    VecF64x2Div,
+    VecF64x2Min,
+    VecF64x2Max,
+    VecF64x2PMin,
+    VecF64x2PMax,
     // VecF64x2 Compare Operations
-    VecF64x2Eq(VecF64x2, VecF64x2),
-    VecF64x2Ne(VecF64x2, VecF64x2),
-    VecF64x2Lt(VecF64x2, VecF64x2),
-    VecF64x2Gt(VecF64x2, VecF64x2),
-    VecF64x2Le(VecF64x2, VecF64x2),
-    VecF64x2Ge(VecF64x2, VecF64x2),
+    VecF64x2Eq,
+    VecF64x2Ne,
+    VecF64x2Lt,
+    VecF64x2Gt,
+    VecF64x2Le,
+    VecF64x2Ge,
     // VecF64x2 Convert Operations
-    VecF64x2ConvertLowI32x4U(VecI32x4),
-    VecF64x2ConvertLowI32x4S(VecI32x4),
-    VecF64x2PromotLowF32x4(VecF32x4),
+    VecF64x2ConvertLowI32x4U,
+    VecF64x2ConvertLowI32x4S,
+    VecF64x2PromotLowF32x4,
 
     //
     // Reference Instructions
     //
-    RefIsNull(),
+    RefIsNull,
     RefFunc(FuncIdx),
-    FuncRef(TableIdx),
     RefNull(ValType),
-    ExternRef(TableIdx),
 
     //
     // Parametric Instructions
     //
-    Drop(),
-    Select(Option<ValType>),
+    Drop,
+    Select(Option<Vec<ValType>>),
 
     //
     // Variable Instructions
@@ -461,51 +459,51 @@ pub(super) enum Instr {
     MemCopy(),
     MemInit(DataIdx),
     DataDrop(DataIdx),
-    MemI32Load(Offset, Align),
-    MemI64Load(Offset, Align),
-    MemF32Load(Offset, Align),
-    MemF64Load(Offset, Align),
-    MemI32Load8U(Offset, Align),
-    MemI32Load8S(Offset, Align),
-    MemI32Load16U(Offset, Align),
-    MemI32Load16S(Offset, Align),
-    MemI64Load8U(Offset, Align),
-    MemI64Load8S(Offset, Align),
-    MemI64Load16U(Offset, Align),
-    MemI64Load16S(Offset, Align),
-    MemI64Load32U(Offset, Align),
-    MemI64Load32S(Offset, Align),
-    MemI32Store(Offset, Align),
-    MemI64Store(Offset, Align),
-    MemF32Store(Offset, Align),
-    MemF64Store(Offset, Align),
-    MemI32Store8(Offset, Align),
-    MemI32Store16(Offset, Align),
-    MemI64Store8(Offset, Align),
-    MemI64Store16(Offset, Align),
-    MemI64Store32(Offset, Align),
-    MemV128Load(Offset, Align),
-    MemV128Load8x8U(Offset, Align),
-    MemV128Load8x8S(Offset, Align),
-    MemV128Load16x4U(Offset, Align),
-    MemV128Load16x4S(Offset, Align),
-    MemV128Load32x2U(Offset, Align),
-    MemV128Load32x2S(Offset, Align),
-    MemV128Load32Zero(Offset, Align),
-    MemV128Load64Zero(Offset, Align),
-    MemV128Load8Splat(Offset, Align),
-    MemV128Load16Splat(Offset, Align),
-    MemV128Load32Splat(Offset, Align),
-    MemV128Load64Splat(Offset, Align),
-    MemV128Load8Lane(Offset, Align),
-    MemV128Load16Lane(Offset, Align),
-    MemV128Load32Lane(Offset, Align),
-    MemV128Load64Lane(Offset, Align),
-    MemV128Store(Offset, Align),
-    MemV128Store8Lane(Offset, Align),
-    MemV128Store16Lane(Offset, Align),
-    MemV128Store32Lane(Offset, Align),
-    MemV128Store64Lane(Offset, Align),
+    MemI32Load(MemArg),
+    MemI64Load(MemArg),
+    MemF32Load(MemArg),
+    MemF64Load(MemArg),
+    MemI32Load8U(MemArg),
+    MemI32Load8S(MemArg),
+    MemI32Load16U(MemArg),
+    MemI32Load16S(MemArg),
+    MemI64Load8U(MemArg),
+    MemI64Load8S(MemArg),
+    MemI64Load16U(MemArg),
+    MemI64Load16S(MemArg),
+    MemI64Load32U(MemArg),
+    MemI64Load32S(MemArg),
+    MemI32Store(MemArg),
+    MemI64Store(MemArg),
+    MemF32Store(MemArg),
+    MemF64Store(MemArg),
+    MemI32Store8(MemArg),
+    MemI32Store16(MemArg),
+    MemI64Store8(MemArg),
+    MemI64Store16(MemArg),
+    MemI64Store32(MemArg),
+    MemV128Load(MemArg),
+    MemV128Load8x8U(MemArg),
+    MemV128Load8x8S(MemArg),
+    MemV128Load16x4U(MemArg),
+    MemV128Load16x4S(MemArg),
+    MemV128Load32x2U(MemArg),
+    MemV128Load32x2S(MemArg),
+    MemV128Load32Zero(MemArg),
+    MemV128Load64Zero(MemArg),
+    MemV128Load8Splat(MemArg),
+    MemV128Load16Splat(MemArg),
+    MemV128Load32Splat(MemArg),
+    MemV128Load64Splat(MemArg),
+    MemV128Load8Lane(MemArg),
+    MemV128Load16Lane(MemArg),
+    MemV128Load32Lane(MemArg),
+    MemV128Load64Lane(MemArg),
+    MemV128Store(MemArg),
+    MemV128Store8Lane(MemArg),
+    MemV128Store16Lane(MemArg),
+    MemV128Store32Lane(MemArg),
+    MemV128Store64Lane(MemArg),
 
     //
     // Control Instructions
@@ -540,10 +538,18 @@ impl Instr {
     pub fn validate(&self, v: &mut Validator) {
         let mut validated = false;
         validated = validated || self.validate_numeric(v);
+        validated = validated || self.validate_reference(v);
+        validated = validated || self.validate_vector(v);
+        validated = validated || self.validate_parametric(v);
+        validated = validated || self.validate_table(v);
+        validated = validated || self.validate_memory(v);
+
+        if validated {
+            return
+        }
 
         match *self {
             Unreachable => v.unreachable(),
-            Drop => { v.pop_val(ValType::Any); },
             End => {
                 let frame = v.pop_ctrl();
                 v.push_vals(frame.end_types);
@@ -555,31 +561,6 @@ impl Instr {
                 }
 
                 v.push_ctrl(OpCode::Else, frame.start_types, frame.end_types);
-            }
-            
-            Instr::Select(None) => {
-                v.pop_val(ValType::I32);
-                let t1 = v.pop_val(ValType::Any);
-                let t2 = v.pop_val(ValType::Any);
-        
-                let areNum = t1.is_num() && t2.is_num();
-                let areVec = t1.is_vec() && t2.is_vec();
-                if !areNum && !areVec {
-                    panic!("Select: operands must be numeric or vector");
-                }
-        
-                if !matches!(t1, t2) && !matches!(t1, ValType::Unknown) && !matches!(t2, ValType::Unknown) {
-                    panic!("Select: Operands must be the same type");
-                }
-        
-                v.push_val( if matches!(t1, ValType::Unknown) { t2 } else { t1 } );
-            }
-
-            Instr::Select(Some(t)) => {
-                v.pop_val(ValType::I32);
-                v.pop_val(t);
-                v.pop_val(t);
-                v.push_val(t);
             }
 
             Instr::Block(blocktype, instrs) => {
@@ -650,142 +631,142 @@ impl Instr {
         use ValType::*;
         match *self {
             // t.const
-            I32Const(n) => { v.push_val(I32); },
-            I64Const(n) => { v.push_val(I64); },
-            F32Const(n) => { v.push_val(F32); },
-            F64Const(n) => { v.push_val(F64); },
+            I32Const(c) => { v.push_val(I32); },
+            I64Const(c) => { v.push_val(I64); },
+            F32Const(c) => { v.push_val(F32); },
+            F64Const(c) => { v.push_val(F64); },
 
             // t.unop
-            I32Clz(n) => { v.pop_val(I32); v.push_val(I32); },
-            I32Ctz(n) => { v.pop_val(I32); v.push_val(I32); },
-            I32PopCnt(n) => { v.pop_val(I32); v.push_val(I32); },
-            I64Clz(n) => { v.pop_val(I64); v.push_val(I64); },
-            I64Ctz(n) => { v.pop_val(I64); v.push_val(I64); },
-            I64PopCnt(n) => { v.pop_val(I64); v.push_val(I64); },
-            F32Abs(n) => { v.pop_val(F32); v.push_val(F32); },
-            F32Neg(n) => { v.pop_val(F32); v.push_val(F32); },
-            F32Sqrt(n) => { v.pop_val(F32); v.push_val(F32); },
-            F32Ceil(n) => { v.pop_val(F32); v.push_val(F32); },
-            F32Floor(n) => { v.pop_val(F32); v.push_val(F32); },
-            F32Trunc(n) => { v.pop_val(F32); v.push_val(F32); },
-            F32Nearest(n) => { v.pop_val(F32); v.push_val(F32); },
-            F64Abs(n) => { v.pop_val(F64); v.push_val(F64); },
-            F64Neg(n) => { v.pop_val(F64); v.push_val(F64); },
-            F64Sqrt(n) => { v.pop_val(F64); v.push_val(F64); },
-            F64Ceil(n) => { v.pop_val(F64); v.push_val(F64); },
-            F64Floor(n) => { v.pop_val(F64); v.push_val(F64); },
-            F64Trunc(n) => { v.pop_val(F64); v.push_val(F64); },
-            F64Nearest(n) => { v.pop_val(F64); v.push_val(F64); },
+            I32Clz => { v.pop_val(I32); v.push_val(I32); },
+            I32Ctz => { v.pop_val(I32); v.push_val(I32); },
+            I32PopCnt => { v.pop_val(I32); v.push_val(I32); },
+            I64Clz => { v.pop_val(I64); v.push_val(I64); },
+            I64Ctz => { v.pop_val(I64); v.push_val(I64); },
+            I64PopCnt => { v.pop_val(I64); v.push_val(I64); },
+            F32Abs => { v.pop_val(F32); v.push_val(F32); },
+            F32Neg => { v.pop_val(F32); v.push_val(F32); },
+            F32Sqrt => { v.pop_val(F32); v.push_val(F32); },
+            F32Ceil => { v.pop_val(F32); v.push_val(F32); },
+            F32Floor => { v.pop_val(F32); v.push_val(F32); },
+            F32Trunc => { v.pop_val(F32); v.push_val(F32); },
+            F32Nearest => { v.pop_val(F32); v.push_val(F32); },
+            F64Abs => { v.pop_val(F64); v.push_val(F64); },
+            F64Neg => { v.pop_val(F64); v.push_val(F64); },
+            F64Sqrt => { v.pop_val(F64); v.push_val(F64); },
+            F64Ceil => { v.pop_val(F64); v.push_val(F64); },
+            F64Floor => { v.pop_val(F64); v.push_val(F64); },
+            F64Trunc => { v.pop_val(F64); v.push_val(F64); },
+            F64Nearest => { v.pop_val(F64); v.push_val(F64); },
 
             // t.binop
-            I32Add(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I32Sub(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I32Mul(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I32DivU(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I32DivS(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I32RemU(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I32RemS(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I64Add(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
-            I64Sub(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
-            I64Mul(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
-            I64DivU(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
-            I64DivS(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
-            I64RemU(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
-            I64RemS(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
-            F32Add(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
-            F32Sub(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
-            F32Mul(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
-            F32Div(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
-            F32Min(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
-            F32Max(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
-            F32Copysign(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
-            F64Add(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
-            F64Sub(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
-            F64Mul(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
-            F64Div(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
-            F64Min(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
-            F64Max(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
-            F64Copysign(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
+            I32Add => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32Sub => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32Mul => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32DivU => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32DivS => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32RemU => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32RemS => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I64Add => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
+            I64Sub => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
+            I64Mul => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
+            I64DivU => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
+            I64DivS => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
+            I64RemU => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
+            I64RemS => { v.pop_val(I64); v.pop_val(I64); v.push_val(I64); },
+            F32Add => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
+            F32Sub => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
+            F32Mul => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
+            F32Div => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
+            F32Min => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
+            F32Max => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
+            F32Copysign => { v.pop_val(F32); v.pop_val(F32); v.push_val(F32); },
+            F64Add => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
+            F64Sub => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
+            F64Mul => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
+            F64Div => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
+            F64Min => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
+            F64Max => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
+            F64Copysign => { v.pop_val(F64); v.pop_val(F64); v.push_val(F64); },
 
             // t.testop
-            I32Eqz(n) => { v.pop_val(I32); v.push_val(I32); },
-            I64Eqz(n) => { v.pop_val(I64); v.push_val(I32); },
+            I32Eqz => { v.pop_val(I32); v.push_val(I32); },
+            I64Eqz => { v.pop_val(I64); v.push_val(I32); },
 
             // t.relop
-            I32Eq(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I32Ne(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I32LtU(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I32LtS(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I32GtU(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I32GtS(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I32LeU(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I32LeS(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I32GeU(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); }
-            I32GeS(n, n2) => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
-            I64Eq(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
-            I64Ne(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
-            I64LtU(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
-            I64LtS(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
-            I64GtU(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
-            I64GtS(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
-            I64LeU(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
-            I64LeS(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
-            I64GeU(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
-            I64GeS(n, n2) => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
-            F32Eq(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
-            F32Ne(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
-            F32Lt(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
-            F32Gt(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
-            F32Le(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
-            F32Ge(n, n2) => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
-            F64Eq(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
-            F64Ne(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
-            F64Lt(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
-            F64Gt(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
-            F64Le(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
-            F64Ge(n, n2) => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
+            I32Eq => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32Ne => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32LtU => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32LtS => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32GtU => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32GtS => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32LeU => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32LeS => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I32GeU => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); }
+            I32GeS => { v.pop_val(I32); v.pop_val(I32); v.push_val(I32); },
+            I64Eq => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64Ne => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64LtU => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64LtS => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64GtU => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64GtS => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64LeU => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64LeS => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64GeU => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            I64GeS => { v.pop_val(I64); v.pop_val(I64); v.push_val(I32); },
+            F32Eq => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
+            F32Ne => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
+            F32Lt => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
+            F32Gt => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
+            F32Le => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
+            F32Ge => { v.pop_val(F32); v.pop_val(F32); v.push_val(I32); },
+            F64Eq => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
+            F64Ne => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
+            F64Lt => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
+            F64Gt => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
+            F64Le => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
+            F64Ge => { v.pop_val(F64); v.pop_val(F64); v.push_val(I32); },
 
             // t.cvtop_t1_sx
-            I32Extend8S(n) => { v.pop_val(I8); v.push_val(I32); },
-            I32Extend16S(n) => { v.pop_val(I16); v.push_val(I32); },
-            I32WrapI64(n) => { v.pop_val(I64); v.push_val(I32); },
-            I32TruncF32U(n) => { v.pop_val(F32); v.push_val(I32); },
-            I32TruncF32S(n) => { v.pop_val(F32); v.push_val(I32); },
-            I32TruncF64U(n) => { v.pop_val(F64); v.push_val(I32); },
-            I32TruncF64S(n) => { v.pop_val(F64); v.push_val(I32); },
-            I32TruncSatF32U(n) => { v.pop_val(F32); v.push_val(I32); },
-            I32TruncSatF32S(n) => { v.pop_val(F32); v.push_val(I32); },
-            I32TruncSatF64U(n) => { v.pop_val(F64); v.push_val(I32); },
-            I32TruncSatF64S(n) => { v.pop_val(F64); v.push_val(I32); },
-            I32ReinterpretF32(n) => { v.pop_val(F32); v.push_val(I32); },
-            I64Extend8S(n) => { v.pop_val(I8); v.push_val(I64); },
-            I64Extend16S(n) => { v.pop_val(I16); v.push_val(I64); },
-            I64Extend32S(n) => { v.pop_val(I32); v.push_val(I64); },
-            I64ExtendI32U(n) => { v.pop_val(I32); v.push_val(I64); },
-            I64ExtendI32S(n) => { v.pop_val(I32); v.push_val(I64); },
-            I64TruncF32U(n) => { v.pop_val(F32); v.push_val(I64); },
-            I64TruncF32S(n) => { v.pop_val(F32); v.push_val(I64); },
-            I64TruncF64U(n) => { v.pop_val(F64); v.push_val(I64); },
-            I64TruncF64S(n) => { v.pop_val(F64); v.push_val(I64); },
-            I64TruncSatF32U(n) => { v.pop_val(F32); v.push_val(I64); },
-            I64TruncSatF32S(n) => { v.pop_val(F32); v.push_val(I64); },
-            I64TruncSatF64U(n) => { v.pop_val(F64); v.push_val(I64); },
-            I64TruncSatF64S(n) => { v.pop_val(F64); v.push_val(I64); },
-            I64ReinterpretF64(n) => { v.pop_val(F64); v.push_val(I64); },
-            F32DemoteF64(n) => { v.pop_val(F64); v.push_val(F32); },
-            F32ConvertI32U(n) => { v.pop_val(I32); v.push_val(F32); },
-            F32ConvertI32S(n) => { v.pop_val(I32); v.push_val(F32); },
-            F32ConvertI64U(n) => { v.pop_val(I64); v.push_val(F32); },
-            F32ConvertI64S(n) => { v.pop_val(I64); v.push_val(F32); },
-            F32ReinterpretI32(n) => { v.pop_val(I32); v.push_val(F32); },
-            F32ReinterpretI64(n) => { v.pop_val(I64); v.push_val(F32); },
-            F64PromoteF32(n) => { v.pop_val(I64); v.push_val(F64); },
-            F64ConvertI32U(n) => { v.pop_val(I32); v.push_val(F64); },
-            F64ConvertI32S(n) => { v.pop_val(I32); v.push_val(F64); },
-            F64ConvertI64U(n) => { v.pop_val(I64); v.push_val(F64); },
-            F64ConvertI64S(n) => { v.pop_val(I64); v.push_val(F64); },
-            F64ReinterpretI32(n) => { v.pop_val(I32); v.push_val(F64); },
-            F64ReinterpretI64(n) => { v.pop_val(I64); v.push_val(F64); },
+            I32Extend8S => { v.pop_val(I32); v.push_val(I32); },
+            I32Extend16S => { v.pop_val(I32); v.push_val(I32); },
+            I32WrapI64 => { v.pop_val(I64); v.push_val(I32); },
+            I32TruncF32U => { v.pop_val(F32); v.push_val(I32); },
+            I32TruncF32S => { v.pop_val(F32); v.push_val(I32); },
+            I32TruncF64U => { v.pop_val(F64); v.push_val(I32); },
+            I32TruncF64S => { v.pop_val(F64); v.push_val(I32); },
+            I32TruncSatF32U => { v.pop_val(F32); v.push_val(I32); },
+            I32TruncSatF32S => { v.pop_val(F32); v.push_val(I32); },
+            I32TruncSatF64U => { v.pop_val(F64); v.push_val(I32); },
+            I32TruncSatF64S => { v.pop_val(F64); v.push_val(I32); },
+            I32ReinterpretF32 => { v.pop_val(F32); v.push_val(I32); },
+            I64Extend8S => { v.pop_val(I32); v.push_val(I64); },
+            I64Extend16S => { v.pop_val(I32); v.push_val(I64); },
+            I64Extend32S => { v.pop_val(I32); v.push_val(I64); },
+            I64ExtendI32U => { v.pop_val(I32); v.push_val(I64); },
+            I64ExtendI32S => { v.pop_val(I32); v.push_val(I64); },
+            I64TruncF32U => { v.pop_val(F32); v.push_val(I64); },
+            I64TruncF32S => { v.pop_val(F32); v.push_val(I64); },
+            I64TruncF64U => { v.pop_val(F64); v.push_val(I64); },
+            I64TruncF64S => { v.pop_val(F64); v.push_val(I64); },
+            I64TruncSatF32U => { v.pop_val(F32); v.push_val(I64); },
+            I64TruncSatF32S => { v.pop_val(F32); v.push_val(I64); },
+            I64TruncSatF64U => { v.pop_val(F64); v.push_val(I64); },
+            I64TruncSatF64S => { v.pop_val(F64); v.push_val(I64); },
+            I64ReinterpretF64 => { v.pop_val(F64); v.push_val(I64); },
+            F32DemoteF64 => { v.pop_val(F64); v.push_val(F32); },
+            F32ConvertI32U => { v.pop_val(I32); v.push_val(F32); },
+            F32ConvertI32S => { v.pop_val(I32); v.push_val(F32); },
+            F32ConvertI64U => { v.pop_val(I64); v.push_val(F32); },
+            F32ConvertI64S => { v.pop_val(I64); v.push_val(F32); },
+            F32ReinterpretI32 => { v.pop_val(I32); v.push_val(F32); },
+            F32ReinterpretI64 => { v.pop_val(I64); v.push_val(F32); },
+            F64PromoteF32 => { v.pop_val(I64); v.push_val(F64); },
+            F64ConvertI32U => { v.pop_val(I32); v.push_val(F64); },
+            F64ConvertI32S => { v.pop_val(I32); v.push_val(F64); },
+            F64ConvertI64U => { v.pop_val(I64); v.push_val(F64); },
+            F64ConvertI64S => { v.pop_val(I64); v.push_val(F64); },
+            F64ReinterpretI32 => { v.pop_val(I32); v.push_val(F64); },
+            F64ReinterpretI64 => { v.pop_val(I64); v.push_val(F64); },
 
             _ => { skipped = true; }
         }
@@ -801,8 +782,8 @@ impl Instr {
         match *self {
             RefNull(ValType::FuncRef) => { v.push_val(ValType::FuncRef); },
             RefNull(ValType::ExternRef) => { v.push_val(ValType::ExternRef); },
-            RefIsNull() => {
-                let val = v.pop_val(Any);
+            RefIsNull => {
+                let val = v.pop_val(Unknown);
                 
                 if val.is_ref() {
                     v.push_val(I32)
@@ -822,6 +803,638 @@ impl Instr {
 
                 v.push_val(ValType::FuncRef);
             }
+
+            _ => { skipped = true; }
+        }
+
+        !skipped
+    }
+
+    fn validate_vector(&self, v: &Validator) -> bool {
+        let mut skipped = false;
+
+        use Instr::*;
+        use ValType::*;
+        match *self {
+            V128Const(c) => { v.push_val(V128); },
+
+            // v128.vvternop
+            V128Bitselect => { v.pop_vals(vec![V128, V128, V128]); v.push_val(V128); },
+            
+            // VecI8x16 Instructions
+            VecI8x16Swizzle => { v.pop_vals(vec![V128, V128]); v.push_val(V128); }
+            VecI8x16Shuffle(laneindices) => {
+                for laneidx in laneindices {
+                    if laneidx >= 32 {
+                        panic!("For all laneidxi​, in laneidx16, laneidxi​ must be smaller than 32.")
+                    }
+
+                    v.pop_vals(vec![V128, V128]); v.push_val(V128);
+                }
+            }
+
+            // shape.splat
+            VecI8x16Splat => { v.pop_val(I32); v.push_val(V128); },
+            VecI16x8Splat => { v.pop_val(I32); v.push_val(V128); },
+            VecI32x4Splat => { v.pop_val(I32); v.push_val(V128); },
+            VecI64x2Splat => { v.pop_val(I64); v.push_val(V128); },
+            VecF32x4Splat => { v.pop_val(F32); v.push_val(V128); },
+            VecF64x2Splat => { v.pop_val(F64); v.push_val(V128); },
+            
+            // shape.extract_lane_sx
+            VecI8x16ExtractLaneU(laneidx) => {
+                if laneidx >= 16 { panic!("laneidx must be smaller than 16.") }
+                v.pop_val(V128); v.push_val(I32);
+            },
+            VecI8x16ExtractLaneS(laneidx) => {
+                if laneidx >= 16 { panic!("laneidx must be smaller than 16.") }
+                v.pop_val(V128); v.push_val(I32);
+            },
+            VecI16x8ExtractLaneU(laneidx) => {
+                if laneidx >= 8 { panic!("laneidx must be smaller than 8.") }
+                v.pop_val(V128); v.push_val(I32);
+            }
+            VecI16x8ExtractLaneS(laneidx) => {
+                if laneidx >= 8 { panic!("laneidx must be smaller than 8.") }
+                v.pop_val(V128); v.push_val(I32);
+            }
+            VecI32x4ExtractLane(laneidx) => {
+                if laneidx >= 4 { panic!("laneidx must be smaller than 4.") }
+                v.pop_val(V128); v.push_val(I32);
+            }
+            VecI64x2ExtractLane(laneidx) => {
+                if laneidx >= 2 { panic!("laneidx must be smaller than 4.") }
+                v.pop_val(V128); v.push_val(I64);
+            }
+            VecF32x4ExtractLane(laneidx) => {
+                if laneidx >= 4 { panic!("laneidx must be smaller than 4.") }
+                v.pop_val(V128); v.push_val(F32);
+            }
+            VecF64x2ExtractLane(laneidx) => {
+                if laneidx >= 2 { panic!("laneidx must be smaller than 2.") }
+                v.pop_val(V128); v.push_val(F64);
+            }
+
+            // shape.replace_lane
+            VecI8x16ReplaceLane(laneidx) => {
+                if laneidx >= 16 { panic!("laneidx must be smaller than 16.") }
+                v.pop_vals(vec![V128, I32]); v.push_val(V128);
+            },
+            VecI16x8ReplaceLane(laneidx) => {
+                if laneidx >= 8 { panic!("laneidx must be smaller than 8.") }
+                v.pop_vals(vec![V128, I32]); v.push_val(V128);
+            },
+            VecI32x4ReplaceLane(laneidx) => {
+                if laneidx >= 4 { panic!("laneidx must be smaller than 4.") }
+                v.pop_vals(vec![V128, I32]); v.push_val(V128);
+            },
+            VecI64x2ReplaceLane(laneidx) => {
+                if laneidx >= 2 { panic!("laneidx must be smaller than 2.") }
+                v.pop_vals(vec![V128, I64]); v.push_val(V128);
+            },
+            VecF32x4ReplaceLane(laneidx) => {
+                if laneidx >= 4 { panic!("laneidx must be smaller than 4.") }
+                v.pop_vals(vec![V128, F32]); v.push_val(V128);
+            },
+            VecF64x2ReplaceLane(laneidx) => {
+                if laneidx >= 2 { panic!("laneidx must be smaller than 2.") }
+                v.pop_vals(vec![V128, F64]); v.push_val(V128);
+            },
+
+            // shape.vunop
+            V128Not => { v.pop_val(V128); v.push_val(V128); },
+            VecI8x16Abs => { v.pop_val(V128); v.push_val(V128); },
+            VecI8x16Neg => { v.pop_val(V128); v.push_val(V128); },
+            VecI8x16PopCnt => { v.pop_val(V128); v.push_val(V128); },
+            VecI16x8Abs => { v.pop_val(V128); v.push_val(V128); },
+            VecI16x8Neg => { v.pop_val(V128); v.push_val(V128); },
+            VecI32x4Abs => { v.pop_val(V128); v.push_val(V128); },
+            VecI32x4Neg => { v.pop_val(V128); v.push_val(V128); },
+            VecI64x2Abs => { v.pop_val(V128); v.push_val(V128); },
+            VecI64x2Neg => { v.pop_val(V128); v.push_val(V128); },
+            VecF32x4Abs => { v.pop_val(V128); v.push_val(V128); },
+            VecF32x4Neg => { v.pop_val(V128); v.push_val(V128); },
+            VecF32x4Sqrt => { v.pop_val(V128); v.push_val(V128); },
+            VecF32x4Ceil => { v.pop_val(V128); v.push_val(V128); },
+            VecF32x4Floor => { v.pop_val(V128); v.push_val(V128); },
+            VecF32x4Trunc => { v.pop_val(V128); v.push_val(V128); },
+            VecF32x4Nearest => { v.pop_val(V128); v.push_val(V128); },
+            VecF64x2Abs => { v.pop_val(V128); v.push_val(V128); },
+            VecF64x2Neg => { v.pop_val(V128); v.push_val(V128); },
+            VecF64x2Sqrt => { v.pop_val(V128); v.push_val(V128); },
+            VecF64x2Ceil => { v.pop_val(V128); v.push_val(V128); },
+            VecF64x2Floor => { v.pop_val(V128); v.push_val(V128); },
+            VecF64x2Trunc => { v.pop_val(V128); v.push_val(V128); },
+            VecF64x2Nearest => { v.pop_val(V128); v.push_val(V128); },
+
+            // shape.vbinop        
+            V128And => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            V128AndNot => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            V128Or => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            V128Xor => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI8x16Add => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI8x16Sub => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI8x16AvgrU => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8Add => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8Sub => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8Mul => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8AvgrU => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8Q15MulrSatS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4Add => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4Sub => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4Mul => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI64x2Add => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI64x2Sub => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI64x2Mul => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF32x4Add => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF32x4Sub => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF32x4Mul => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF32x4Div => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF32x4Min => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF32x4Max => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF32x4PMin => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF32x4PMax => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF64x2Add => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF64x2Sub => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF64x2Mul => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF64x2Div => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF64x2Min => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF64x2Max => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF64x2PMin => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF64x2PMax => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+
+            // shape.vrelop
+            VecI8x16Eq => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI8x16Ne => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI8x16LtU => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI8x16LtS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI8x16GtU => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI8x16GtS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI8x16LeU => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI8x16LeS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI8x16GeU => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI8x16GeS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8Eq => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8Ne => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8LtU => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8LtS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8GtU => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8GtS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8LeU => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8LeS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8GeU => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8GeS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4Eq => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4Ne => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4LtU => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4LtS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4GtU => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4GtS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4LeU => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4LeS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4GeU => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4GeS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI64x2Eq => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI64x2Ne => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI64x2LtS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI64x2GtS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI64x2LeS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI64x2GeS => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF32x4Eq => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF32x4Ne => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF32x4Lt => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF32x4Gt => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF32x4Le => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF32x4Ge => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF64x2Eq => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF64x2Ne => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF64x2Lt => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF64x2Gt => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF64x2Le => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecF64x2Ge => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            
+            // ishape.vshiftop
+            VecI8x16Shl => { v.pop_vals(vec![V128, I32]); v.push_val(V128); },
+            VecI8x16ShrU => { v.pop_vals(vec![V128, I32]); v.push_val(V128); },
+            VecI8x16ShrS => { v.pop_vals(vec![V128, I32]); v.push_val(V128); },
+            VecI16x8Shl => { v.pop_vals(vec![V128, I32]); v.push_val(V128); },
+            VecI16x8ShrU => { v.pop_vals(vec![V128, I32]); v.push_val(V128); },
+            VecI16x8ShrS => { v.pop_vals(vec![V128, I32]); v.push_val(V128); },
+            VecI32x4Shl => { v.pop_vals(vec![V128, I32]); v.push_val(V128); },
+            VecI32x4ShrU => { v.pop_vals(vec![V128, I32]); v.push_val(V128); },
+            VecI32x4ShrS => { v.pop_vals(vec![V128, I32]); v.push_val(V128); },
+            VecI64x2Shl => { v.pop_vals(vec![V128, I32]); v.push_val(V128); },
+            VecI64x2ShrU => { v.pop_vals(vec![V128, I32]); v.push_val(V128); },
+            VecI64x2ShrS => { v.pop_vals(vec![V128, I32]); v.push_val(V128); },
+
+            // shape.vtestop
+            V128AnyTrue => { v.pop_val(V128); v.push_val(I32) },
+            VecI8x16AllTrue => { v.pop_val(V128); v.push_val(I32) },
+            VecI16x8AllTrue => { v.pop_val(V128); v.push_val(I32) },
+            VecI32x4AllTrue => { v.pop_val(V128); v.push_val(I32) },
+            VecI64x2AllTrue => { v.pop_val(V128); v.push_val(I32) },
+
+            // shape.vcvtop
+            VecI16x8ExtendHalfI8x16U => { v.pop_val(V128); v.push_val(V128) },
+            VecI16x8ExtendHalfI8x16S => { v.pop_val(V128); v.push_val(V128) },
+            VecI32x4ExtendHalfI16x8U => { v.pop_val(V128); v.push_val(V128) },
+            VecI32x4ExtendHalfI16x8S => { v.pop_val(V128); v.push_val(V128) },
+            VecI32x4TruncSatF32x4U => { v.pop_val(V128); v.push_val(V128) },
+            VecI32x4TruncSatF32x4S => { v.pop_val(V128); v.push_val(V128) },
+            VecI32x4TruncSatF64x2UZero => { v.pop_val(V128); v.push_val(V128) },
+            VecI32x4TruncSatF64x2SZero => { v.pop_val(V128); v.push_val(V128) },
+            VecI64x2ExtendHalfI32x4U => { v.pop_val(V128); v.push_val(V128) },
+            VecI64x2ExtendHalfI32x4S => { v.pop_val(V128); v.push_val(V128) },
+            VecF32x4ConvertI32x4U => { v.pop_val(V128); v.push_val(V128) },
+            VecF32x4ConvertI32x4S => { v.pop_val(V128); v.push_val(V128) },
+            VecF32x4DemoteF64x2Zero => { v.pop_val(V128); v.push_val(V128) },
+            VecF64x2ConvertLowI32x4U => { v.pop_val(V128); v.push_val(V128) },
+            VecF64x2ConvertLowI32x4S => { v.pop_val(V128); v.push_val(V128) },
+            VecF64x2PromotLowF32x4 => { v.pop_val(V128); v.push_val(V128) },
+
+            // ishape.narrow
+            VecI8x16NarrowI16x8U => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI8x16NarrowI16x8S => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8NarrowI32x4U => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8NarrowI32x4S => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+
+            // ishape.bitmask
+            VecI8x16Bitmask => { v.pop_val(V128); v.push_val(I32) },
+            VecI16x8Bitmask => { v.pop_val(V128); v.push_val(I32) },
+            VecI32x4Bitmask => { v.pop_val(V128); v.push_val(I32) },
+            VecI64x2Bitmask => { v.pop_val(V128); v.push_val(I32) },
+
+            // ishape.dot
+            VecI32x4DotI16x8S => { v.pop_vals(vec![V128, V128]); v.push_val(V128)},
+
+            // ishape.extmul
+            VecI16x8ExtMulHalfI8x16U => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI16x8ExtMulHalfI8x16S => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4ExtMulHalfI16x8U => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI32x4ExtMulHalfI16x8S => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI64x2ExtMulHalfI32x4U => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+            VecI64x2ExtMulHalfI32x4S => { v.pop_vals(vec![V128, V128]); v.push_val(V128); },
+
+            // ishape.extadd_pairwise
+            VecI16x8ExtAddPairwiseI8x16U => { v.pop_val(V128); v.push_val(V128) },
+            VecI16x8ExtAddPairwiseI8x16S => { v.pop_val(V128); v.push_val(V128) },
+            VecI32x4ExtAddPairwiseI16x8U => { v.pop_val(V128); v.push_val(V128) },
+            VecI32x4ExtAddPairwiseI16x8S => { v.pop_val(V128); v.push_val(V128) },
+
+            _ => { skipped = true; }
+        }
+
+        !skipped
+    }
+
+    fn validate_parametric(&self, v: &Validator) -> bool {
+        let mut skipped = false;
+
+        use Instr::*;
+        use ValType::*;
+        match *self {
+            Drop => { v.pop_val(Unknown); },
+            Select(None) => {
+                v.pop_val(I32);
+                let t1 = v.pop_val(Unknown);
+                let t2 = v.pop_val(Unknown);
+        
+                let areNum = t1.is_num() && t2.is_num();
+                let areVec = t1.is_vec() && t2.is_vec();
+                if !areNum && !areVec {
+                    panic!("Select: operands must be numeric or vector");
+                }
+        
+                if !matches!(t1, t2) && !matches!(t1, ValType::Unknown) && !matches!(t2, ValType::Unknown) {
+                    panic!("Select: Operands must be the same type");
+                }
+        
+                v.push_val( if matches!(t1, ValType::Unknown) { t2 } else { t1 } );
+            }
+
+            Select(Some(valtypes)) => {
+                if valtypes.len() != 1 {
+                    panic!("Select: must be given exactly one value type");
+                }
+
+                v.pop_vals(vec![valtypes[0], valtypes[0], I32]);
+                v.push_val(valtypes[0]);
+            }
+
+            LocalGet(x) => {
+                if v.ctx.locals.len() <= x { panic!("local {} out of range", x); }
+
+                let t = v.ctx.locals[x];
+                v.push_val(t);
+            }
+
+            LocalSet(x) => {
+                if v.ctx.locals.len() <= x { panic!("local {} out of range", x); }
+
+                let t = v.ctx.locals[x];
+                v.pop_val(t);
+            }
+
+            LocalTee(x) => {
+                if v.ctx.locals.len() <= x { panic!("local {} out of range", x); }
+
+                let t = v.ctx.locals[x];
+                v.pop_val(t);
+                v.push_val(t);
+            }
+
+            GlobalGet(x) => {
+                if v.ctx.globals.len() <= x { panic!("global {} out of range", x); }
+
+                let glbl = v.ctx.globals[x];
+                let t = glbl.valtype;
+                v.push_val(t);
+            }
+
+            GlobalSet(x) => {
+                if v.ctx.globals.len() <= x { panic!("global {} out of range", x); }
+
+                let glbl = v.ctx.globals[x];
+                let m = glbl.valmut;
+                if !matches!(m, Mut::Var) {
+                    panic!("global {} is immutable", x);
+                }
+
+                let t = glbl.valtype;
+                v.pop_val(t);
+            }
+
+            _ => { skipped = true; }
+        }
+
+        !skipped
+    }
+
+    fn validate_table(&self, v: &Validator) -> bool {
+        let mut skipped = false;
+
+        use Instr::*;
+        use ValType::*;
+        match *self {
+            TableGet(x) => {
+                if v.ctx.tables.len() <= x { panic!("table {} out of range", x); }
+                let t = v.ctx.tables[x].reftype;
+
+                v.pop_val(I32);
+                v.push_val(t);
+            }
+
+            TableSet(x) => {
+                if v.ctx.tables.len() <= x { panic!("table {} out of range", x); }
+                let t = v.ctx.tables[x].reftype;
+
+                v.pop_val(I32);
+                v.pop_val(t);
+            }
+
+            TableSize(x) => {
+                if v.ctx.tables.len() <= x { panic!("table {} out of range", x); }
+                v.push_val(I32);
+            }
+
+            TableGrow(x) => {
+                if v.ctx.tables.len() <= x { panic!("table {} out of range", x); }
+                let t = v.ctx.tables[x].reftype;
+
+                v.pop_vals(vec![t, I32]);
+                v.push_val(I32);
+            }
+
+            TableFill(x) => {
+                if v.ctx.tables.len() <= x { panic!("table {} out of range", x); }
+                let t = v.ctx.tables[x].reftype;
+
+                v.pop_vals(vec![I32, t, I32]);
+            }
+
+            TableCopy(x, y) => {
+                if v.ctx.tables.len() <= x { panic!("table {} out of range (argument 1)", x); }
+                if v.ctx.tables.len() <= y { panic!("table {} out of range (argument 2)", y); }
+
+                let t1 = v.ctx.tables[x].reftype;
+                let t2 = v.ctx.tables[y].reftype;
+                if !matches!(t1, t2) {
+                    panic!("TableCopy: operands must be the same type");
+                }
+
+                v.pop_vals(vec![I32, I32, I32]);
+            }
+
+            TableInit(x, y) => {
+                if v.ctx.tables.len() <= x { panic!("table {} out of range", x); }
+                if v.ctx.elems.len() <= y { panic!("element {} out of range", y); }
+
+                let t1 = v.ctx.tables[x].reftype;
+                let t2 = v.ctx.elems[y];
+                if !matches!(t1, t2) {
+                    panic!("TableInit: operands must be the same type");
+                }
+
+                v.pop_vals(vec![I32, I32, I32]);
+            }
+
+            TableElemDrop(x) => {
+                if v.ctx.elems.len() <= x { panic!("element {} out of range", x); }
+            }
+
+            _ => { skipped = true; }
+        }
+
+        !skipped
+    }
+
+    fn validate_memory(&self, v: &Validator) -> bool {
+        let mut skipped = false;
+
+        use Instr::*;
+        use ValType::*;
+        match *self {
+            // t.load
+            MemI32Load(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (32/8) { panic!("align must be < 32/8"); }
+                v.pop_val(I32);
+                v.push_val(I32);
+            }
+            MemI64Load(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (64/8) { panic!("align must be < 64/8"); }
+                v.pop_val(I32);
+                v.push_val(I64);
+            }
+            MemF32Load(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (32/8) { panic!("align must be < 32/8"); }
+                v.pop_val(I32);
+                v.push_val(F32);
+            }
+            MemF64Load(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (64/8) { panic!("align must be < 64/8"); }
+                v.pop_val(I32);
+                v.push_val(F64);
+            }
+            MemV128Load(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (128/8) { panic!("align must be < 128/8"); }
+                v.pop_val(I32);
+                v.push_val(V128);
+            }
+
+            // t.loadN_sx
+            MemI32Load8U(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (8/8) { panic!("align must be < 8/8"); }
+                v.pop_val(I32);
+                v.push_val(I32);
+            }
+            MemI32Load8S(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (8/8) { panic!("align must be < 8/8"); }
+                v.pop_val(I32);
+                v.push_val(I32);
+            }
+            MemI32Load16U(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (16/8) { panic!("align must be < 16/8"); }
+                v.pop_val(I32);
+                v.push_val(I32);
+            }
+            MemI32Load16S(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (16/8) { panic!("align must be < 16/8"); }
+                v.pop_val(I32);
+                v.push_val(I32);
+            }
+            MemI64Load8U(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (8/8) { panic!("align must be < 8/8"); }
+                v.pop_val(I32);
+                v.push_val(I64);
+            }
+            MemI64Load8S(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (8/8) { panic!("align must be < 8/8"); }
+                v.pop_val(I32);
+                v.push_val(I64);
+            }
+            MemI64Load16S(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (16/8) { panic!("align must be < 16/8"); }
+                v.pop_val(I32);
+                v.push_val(I64);
+            }
+            MemI64Load32U(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (32/8) { panic!("align must be < 32/8"); }
+                v.pop_val(I32);
+                v.push_val(I64);
+            }
+            MemI64Load32S(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (32/8) { panic!("align must be < 32/8"); }
+                v.pop_val(I32);
+                v.push_val(I64);
+            }
+
+            // t.store
+            MemI32Store(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (32/8) { panic!("align must be < 32/8"); }
+                v.pop_vals(vec![I32, I32]);
+            }
+            MemI64Store(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (64/8) { panic!("align must be < 64/8"); }
+                v.pop_vals(vec![I32, I64]);
+            }
+            MemF32Store(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (32/8) { panic!("align must be < 32/8"); }
+                v.pop_vals(vec![I32, F32]);
+            }
+            MemF64Store(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (64/8) { panic!("align must be < 64/8"); }
+                v.pop_vals(vec![I32, F64]);
+            }
+            MemV128Store(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (128/8) { panic!("align must be < 128/8"); }
+                v.pop_vals(vec![I32, V128]);
+            }
+
+            // t.storeN
+            MemI32Store8(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (8/8) { panic!("align must be < 8/8"); }
+                v.pop_vals(vec![I32, I32]);
+            }
+            MemI32Store16(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (16/8) { panic!("align must be < 16/8"); }
+                v.pop_vals(vec![I32, I32]);
+            }
+            MemI64Store8(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (8/8) { panic!("align must be < 8/8"); }
+                v.pop_vals(vec![I32, I64]);
+            }
+            MemI64Store16(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (16/8) { panic!("align must be < 16/8"); }
+                v.pop_vals(vec![I32, I64]);
+
+            }
+            MemI64Store32(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= (32/8) { panic!("align must be < 32/8"); }
+                v.pop_vals(vec![I32, I64]);
+            }
+
+            // v128.loadNxM
+            MemV128Load8x8U(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= ((8/8)*8) { panic!("align must be < (8/8) * 8"); }
+                v.pop_val(I32);
+                v.push_val(V128);
+            }
+            MemV128Load8x8S(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= ((8/8)*8) { panic!("align must be < (8/8) * 8"); }
+                v.pop_val(I32);
+                v.push_val(V128);
+            }
+            MemV128Load16x4U(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= ((16/8)*4) { panic!("align must be < (16/8) * 4"); }
+                v.pop_val(I32);
+                v.push_val(V128);
+            }
+            MemV128Load16x4S(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= ((16/8)*4) { panic!("align must be < (16/8) * 4"); }
+                v.pop_val(I32);
+                v.push_val(V128);
+            }
+            MemV128Load32x2U(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= ((32/8)*2) { panic!("align must be < (32/8) * 2"); }
+                v.pop_val(I32);
+                v.push_val(V128);
+            }
+            MemV128Load32x2S(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= ((32/8)*2) { panic!("align must be < (32/8) * 2"); }
+                v.pop_val(I32);
+                v.push_val(V128);
+            }
+
 
             _ => { skipped = true; }
         }
