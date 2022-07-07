@@ -1,6 +1,7 @@
 use super::types::*;
 use super::validations::Validator;
 
+#[derive(std::fmt::Debug)]
 pub(super) enum Instr {
     //
     // Numeric Instructions
@@ -453,11 +454,11 @@ pub(super) enum Instr {
     //
     // Memory Instructions
     //
-    MemSize(),
-    MemGrow(),
-    MemFill(),
-    MemCopy(),
-    MemInit(DataIdx),
+    MemorySize,
+    MemoryGrow,
+    MemoryFill,
+    MemoryCopy,
+    MemoryInit(DataIdx),
     DataDrop(DataIdx),
     MemI32Load(MemArg),
     MemI64Load(MemArg),
@@ -495,15 +496,15 @@ pub(super) enum Instr {
     MemV128Load16Splat(MemArg),
     MemV128Load32Splat(MemArg),
     MemV128Load64Splat(MemArg),
-    MemV128Load8Lane(MemArg),
-    MemV128Load16Lane(MemArg),
-    MemV128Load32Lane(MemArg),
-    MemV128Load64Lane(MemArg),
+    MemV128Load8Lane(MemArg, LaneIdx),
+    MemV128Load16Lane(MemArg, LaneIdx),
+    MemV128Load32Lane(MemArg, LaneIdx),
+    MemV128Load64Lane(MemArg, LaneIdx),
     MemV128Store(MemArg),
-    MemV128Store8Lane(MemArg),
-    MemV128Store16Lane(MemArg),
-    MemV128Store32Lane(MemArg),
-    MemV128Store64Lane(MemArg),
+    MemV128Store8Lane(MemArg, LaneIdx),
+    MemV128Store16Lane(MemArg, LaneIdx),
+    MemV128Store32Lane(MemArg, LaneIdx),
+    MemV128Store64Lane(MemArg, LaneIdx),
 
     //
     // Control Instructions
@@ -543,85 +544,11 @@ impl Instr {
         validated = validated || self.validate_parametric(v);
         validated = validated || self.validate_table(v);
         validated = validated || self.validate_memory(v);
+        validated = validated || self.validate_control(v);
 
-        if validated {
-            return
+        if !validated {
+            panic!("Invalid instruction received: {:?}", self);
         }
-
-        match *self {
-            Unreachable => v.unreachable(),
-            End => {
-                let frame = v.pop_ctrl();
-                v.push_vals(frame.end_types);
-            }
-            Else => {
-                let frame = v.pop_ctrl();
-                if !matches!(frame.opcode, OpCode::If) {
-                    panic!("else must follow if");
-                }
-
-                v.push_ctrl(OpCode::Else, frame.start_types, frame.end_types);
-            }
-
-            Instr::Block(blocktype, instrs) => {
-                let func_type = v.module.get_block_type(blocktype);
-                v.pop_vals(func_type.inputs);
-                v.push_ctrl(OpCode::Block, func_type.inputs, func_type.returns);
-            }
-
-            Instr::Loop(blocktype, instrs) => {
-                let func_type = v.module.get_block_type(blocktype);
-                v.pop_vals(func_type.inputs);
-                v.push_ctrl(OpCode::Loop, func_type.inputs, func_type.returns);
-            }
-
-            Instr::If(blocktype, then_instrs, else_instrs) => {
-                let func_type = v.module.get_block_type(blocktype);
-                v.pop_val(ValType::I32);
-                v.pop_vals(func_type.inputs);
-                v.push_ctrl(OpCode::If, func_type.inputs, func_type.returns);
-            }
-
-            Instr::Br(idx) => {
-                if v.ctrls.len() <= idx {
-                    panic!("branch out of range");
-                }
-
-                v.pop_vals(v.label_types(v.ctrls[idx]));
-                v.unreachable()
-            }
-
-            Instr::BrIf(idx) => {
-                if v.ctrls.len() <= idx {
-                    panic!("branch_if out of range");
-                }
-
-                v.pop_val(ValType::I32);
-                v.pop_vals(v.label_types(v.ctrls[idx]));
-                v.push_vals(v.label_types(v.ctrls[idx]));
-            }
-
-            Instr::BrTable(indices, m) => {
-                v.pop_val(ValType::I32);
-                if v.ctrls.len() <= m {
-                    panic!("branch_table out of range");
-                }
-
-                let arity = v.label_types(v.ctrls[m]).len();
-                for n in indices {
-                    if v.ctrls.len() <= n {
-                        panic!("branch_table out of range");
-                    } else if v.label_types(v.ctrls[n]).len() != arity {
-                        panic!("branch_table: label types must match");
-                    }
-
-                    v.push_vals(v.pop_vals(v.label_types(v.ctrls[n])));
-                }
-
-                v.pop_vals(v.label_types(v.ctrls[m]));
-                v.unreachable()
-            }
-        };
     }
 
     fn validate_numeric(&self, v: &Validator) -> bool {
@@ -1254,92 +1181,103 @@ impl Instr {
         use Instr::*;
         use ValType::*;
         match *self {
+            MemorySize => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                v.push_val(I32);
+            }
+            MemoryGrow => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                v.pop_val(I32); v.push_val(I32);
+            }
+            MemoryFill => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                v.pop_vals(vec![I32, I32, I32]);
+            }
+            MemoryCopy => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                v.pop_vals(vec![I32, I32, I32]);
+            }
+            MemoryInit(x) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if v.ctx.datas.len() <= x { panic!("datas {} out of range", x); }
+                v.pop_vals(vec![I32, I32, I32]);
+            }
+            DataDrop(x) => {
+                if v.ctx.datas.len() <= x { panic!("datas {} out of range", x); }
+            }
+
             // t.load
             MemI32Load(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= (32/8) { panic!("align must be < 32/8"); }
-                v.pop_val(I32);
-                v.push_val(I32);
+                v.pop_val(I32); v.push_val(I32);
             }
             MemI64Load(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= (64/8) { panic!("align must be < 64/8"); }
-                v.pop_val(I32);
-                v.push_val(I64);
+                v.pop_val(I32); v.push_val(I64);
             }
             MemF32Load(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= (32/8) { panic!("align must be < 32/8"); }
-                v.pop_val(I32);
-                v.push_val(F32);
+                v.pop_val(I32); v.push_val(F32);
             }
             MemF64Load(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= (64/8) { panic!("align must be < 64/8"); }
-                v.pop_val(I32);
-                v.push_val(F64);
+                v.pop_val(I32); v.push_val(F64);
             }
             MemV128Load(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= (128/8) { panic!("align must be < 128/8"); }
-                v.pop_val(I32);
-                v.push_val(V128);
+                v.pop_val(I32); v.push_val(V128);
             }
 
             // t.loadN_sx
             MemI32Load8U(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= (8/8) { panic!("align must be < 8/8"); }
-                v.pop_val(I32);
-                v.push_val(I32);
+                v.pop_val(I32); v.push_val(I32);
             }
             MemI32Load8S(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= (8/8) { panic!("align must be < 8/8"); }
-                v.pop_val(I32);
-                v.push_val(I32);
+                v.pop_val(I32); v.push_val(I32);
             }
             MemI32Load16U(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= (16/8) { panic!("align must be < 16/8"); }
-                v.pop_val(I32);
-                v.push_val(I32);
+                v.pop_val(I32); v.push_val(I32);
             }
             MemI32Load16S(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= (16/8) { panic!("align must be < 16/8"); }
-                v.pop_val(I32);
-                v.push_val(I32);
+                v.pop_val(I32); v.push_val(I32);
             }
             MemI64Load8U(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= (8/8) { panic!("align must be < 8/8"); }
-                v.pop_val(I32);
-                v.push_val(I64);
+                v.pop_val(I32); v.push_val(I64);
             }
             MemI64Load8S(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= (8/8) { panic!("align must be < 8/8"); }
-                v.pop_val(I32);
-                v.push_val(I64);
+                v.pop_val(I32); v.push_val(I64);
             }
             MemI64Load16S(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= (16/8) { panic!("align must be < 16/8"); }
-                v.pop_val(I32);
-                v.push_val(I64);
+                v.pop_val(I32); v.push_val(I64);
             }
             MemI64Load32U(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= (32/8) { panic!("align must be < 32/8"); }
-                v.pop_val(I32);
-                v.push_val(I64);
+                v.pop_val(I32); v.push_val(I64);
             }
             MemI64Load32S(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= (32/8) { panic!("align must be < 32/8"); }
-                v.pop_val(I32);
-                v.push_val(I64);
+                v.pop_val(I32); v.push_val(I64);
             }
 
             // t.store
@@ -1401,40 +1339,244 @@ impl Instr {
             MemV128Load8x8U(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= ((8/8)*8) { panic!("align must be < (8/8) * 8"); }
-                v.pop_val(I32);
-                v.push_val(V128);
+                v.pop_val(I32); v.push_val(V128);
             }
             MemV128Load8x8S(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= ((8/8)*8) { panic!("align must be < (8/8) * 8"); }
-                v.pop_val(I32);
-                v.push_val(V128);
+                v.pop_val(I32); v.push_val(V128);
             }
             MemV128Load16x4U(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= ((16/8)*4) { panic!("align must be < (16/8) * 4"); }
-                v.pop_val(I32);
-                v.push_val(V128);
+                v.pop_val(I32); v.push_val(V128);
             }
             MemV128Load16x4S(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= ((16/8)*4) { panic!("align must be < (16/8) * 4"); }
-                v.pop_val(I32);
-                v.push_val(V128);
+                v.pop_val(I32); v.push_val(V128);
             }
             MemV128Load32x2U(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= ((32/8)*2) { panic!("align must be < (32/8) * 2"); }
-                v.pop_val(I32);
-                v.push_val(V128);
+                v.pop_val(I32); v.push_val(V128);
             }
             MemV128Load32x2S(memarg) => {
                 if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
                 if memarg.align >= ((32/8)*2) { panic!("align must be < (32/8) * 2"); }
-                v.pop_val(I32);
-                v.push_val(V128);
+                v.pop_val(I32); v.push_val(V128);
             }
 
+            // v128.loadN_splat
+            MemV128Load8Splat(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= 8/8 { panic!("align must be < 8/8"); }
+                v.pop_val(I32); v.push_val(V128);
+            }
+            MemV128Load16Splat(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= 16/8 { panic!("align must be < 16/8"); }
+                v.pop_val(I32); v.push_val(V128);
+            }
+            MemV128Load32Splat(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= 32/8 { panic!("align must be < 32/8"); }
+                v.pop_val(I32); v.push_val(V128);
+            }
+            MemV128Load64Splat(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= 64/8 { panic!("align must be < 64/8"); }
+                v.pop_val(I32); v.push_val(V128);
+            }
+
+            // V128.loadN_zero
+            MemV128Load32Zero(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= 32/8 { panic!("align must be < 32/8"); }
+                v.pop_val(I32); v.push_val(V128);
+            }
+            MemV128Load64Zero(memarg) => {
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= 64/8 { panic!("align must be < 64/8"); }
+                v.pop_val(I32); v.push_val(V128);
+            }
+
+            // v128.loadN_lane
+            MemV128Load8Lane(memarg, laneidx) => {
+                if laneidx >= 128/8 { panic!("laneidx must be < 128/8"); }
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= 8/8 { panic!("align must be < 8/8"); }
+                v.pop_vals(vec![I32, V128]); v.push_val(V128);
+            }
+            MemV128Load16Lane(memarg, laneidx) => {
+                if laneidx >= 128/16 { panic!("laneidx must be < 128/16"); }
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= 16/8 { panic!("align must be < 16/8"); }
+                v.pop_vals(vec![I32, V128]); v.push_val(V128);
+            }
+            MemV128Load32Lane(memarg, laneidx) => {
+                if laneidx >= 128/32 { panic!("laneidx must be < 128/32"); }
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= 32/8 { panic!("align must be < 32/8"); }
+                v.pop_vals(vec![I32, V128]); v.push_val(V128);
+            }
+            MemV128Load64Lane(memarg, laneidx) => {
+                if laneidx >= 128/64 { panic!("laneidx must be < 128/64"); }
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= 64/8 { panic!("align must be < 64/8"); }
+                v.pop_vals(vec![I32, V128]); v.push_val(V128);
+            }
+
+            // v128.storeN_lane
+            MemV128Store8Lane(memarg, laneidx) => {
+                if laneidx >= 128/8 { panic!("laneidx must be < 128/8"); }
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= 8/8 { panic!("align must be < 8/8"); }
+                v.pop_vals(vec![I32, V128]); v.push_val(V128);
+            }
+            MemV128Store16Lane(memarg, laneidx) => {
+                if laneidx >= 128/16 { panic!("laneidx must be < 128/16"); }
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= 16/8 { panic!("align must be < 16/8"); }
+                v.pop_vals(vec![I32, V128]); v.push_val(V128);
+            }
+            MemV128Store32Lane(memarg, laneidx) => {
+                if laneidx >= 128/32 { panic!("laneidx must be < 128/32"); }
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= 32/8 { panic!("align must be < 32/8"); }
+                v.pop_vals(vec![I32, V128]); v.push_val(V128);
+            }
+            MemV128Store64Lane(memarg, laneidx) => {
+                if laneidx >= 128/64 { panic!("laneidx must be < 128/64"); }
+                if v.ctx.mems.len() <= 0 { panic!("C.mems[0] not defined"); }
+                if memarg.align >= 64/8 { panic!("align must be < 64/8"); }
+                v.pop_vals(vec![I32, V128]); v.push_val(V128);
+            }
+
+
+            _ => { skipped = true; }
+        }
+
+        !skipped
+    }
+
+    fn validate_control(&self, v: &Validator) -> bool {
+        let mut skipped = false;
+
+        use Instr::*;
+        use ValType::*;
+        match *self {
+            Nop => (),
+            
+            Unreachable => v.unreachable(),
+
+            End => {
+                let frame = v.pop_ctrl();
+                v.push_vals(frame.end_types);
+            }
+
+            Else => {
+                let frame = v.pop_ctrl();
+                if !matches!(frame.opcode, OpCode::If) {
+                    panic!("else must follow if");
+                }
+
+                v.push_ctrl(OpCode::Else, frame.start_types, frame.end_types);
+            }
+
+            Return => {
+                if v.ctx._return.is_none() {
+                    panic!("C._return is absent")
+                }
+
+                match v.ctx._return {
+                    None => panic!("_return values are absent from context"),
+                    Some(t) => {
+                        v.pop_vals(t);
+                        v.vals_resize(v.ctrls[0].height);
+                    }
+                }
+
+            }
+
+            Call(x) => {
+                if v.ctx.funcs.len() <= x { panic!("func {} out of range", x); }
+                v.pop_vals(v.ctx.funcs[x].inputs);
+                v.push_vals(v.ctx.funcs[x].returns);
+            }
+
+            CallIndirect(x, y) => {
+                if v.ctx.tables.len() <= x { panic!("table {} out of range", x); }
+
+                let t = v.ctx.tables[x].reftype;
+                if !matches!(t, FuncRef) { panic!("table {} is not a function table", x); }
+                if v.ctx.types.len() <= y { panic!("type {} out of range", y); }
+
+                let functype = v.ctx.types[y];
+                v.pop_val(I32);
+                v.pop_vals(functype.inputs);
+                v.push_vals(functype.returns);
+
+            }
+
+            Block(blocktype, instrs) => {
+                let func_type = v.ctx.get_block_type(blocktype);
+                v.pop_vals(func_type.inputs);
+                v.push_ctrl(OpCode::Block, func_type.inputs, func_type.returns);
+            }
+
+            Loop(blocktype, instrs) => {
+                let func_type = v.ctx.get_block_type(blocktype);
+                v.pop_vals(func_type.inputs);
+                v.push_ctrl(OpCode::Loop, func_type.inputs, func_type.returns);
+            }
+
+            If(blocktype, then_instrs, else_instrs) => {
+                let func_type = v.ctx.get_block_type(blocktype);
+                v.pop_val(ValType::I32);
+                v.pop_vals(func_type.inputs);
+                v.push_ctrl(OpCode::If, func_type.inputs, func_type.returns);
+            }
+
+            Br(idx) => {
+                if v.ctrls.len() <= idx {
+                    panic!("branch out of range");
+                }
+
+                v.pop_vals(v.label_types(v.ctrls[idx]));
+                v.unreachable()
+            }
+
+            BrIf(idx) => {
+                if v.ctrls.len() <= idx {
+                    panic!("branch_if out of range");
+                }
+
+                v.pop_val(ValType::I32);
+                v.pop_vals(v.label_types(v.ctrls[idx]));
+                v.push_vals(v.label_types(v.ctrls[idx]));
+            }
+
+            BrTable(indices, m) => {
+                v.pop_val(ValType::I32);
+                if v.ctrls.len() <= m {
+                    panic!("branch_table out of range");
+                }
+
+                let arity = v.label_types(v.ctrls[m]).len();
+                for n in indices {
+                    if v.ctrls.len() <= n {
+                        panic!("branch_table out of range");
+                    } else if v.label_types(v.ctrls[n]).len() != arity {
+                        panic!("branch_table: label types must match");
+                    }
+
+                    v.push_vals(v.pop_vals(v.label_types(v.ctrls[n])));
+                }
+
+                v.pop_vals(v.label_types(v.ctrls[m]));
+                v.unreachable()
+            }
 
             _ => { skipped = true; }
         }

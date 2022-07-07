@@ -28,18 +28,6 @@ impl Module {
             exports: Vec::new(),
         }
     }
-
-    pub fn get_block_type(&self, blocktype: BlockType) -> FuncType {
-        match blocktype {
-            BlockType::TypeIdx(typeidx) => vec![self.types[typeidx]],
-            BlockType::ValType(None) => FuncType{inputs: Vec::new(), returns: Vec::new()},
-            BlockType::ValType(Some(valtype)) => FuncType {
-                inputs: vec![valtype],
-                returns: vec![valtype]
-            }
-        }
-        
-    }
 }
 
 struct CtrlFrame {
@@ -60,7 +48,7 @@ pub(super) struct Context {
     pub datas: Vec<u8>,
     pub locals: Vec<ValType>,
     pub labels: Vec<ResultType>,
-    pub returns: Option<ResultType>,
+    pub _return: Option<ResultType>,
     pub refs: Vec<FuncIdx>,
 }
 
@@ -76,7 +64,7 @@ impl Context {
             datas: vec![],
             locals: vec![],
             labels: vec![],
-            returns: vec![],
+            _return: None,
             refs: vec![],
         }
     }

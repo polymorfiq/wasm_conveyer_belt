@@ -126,6 +126,7 @@ pub(super) type LabelIdx = usize;
 pub(super) type Offset = usize;
 pub(super) type Align = usize;
 
+#[derive(std::fmt::Debug)]
 pub(super) enum BlockType {
     TypeIdx(TypeIdx),
     ValType(Option<ValType>)
@@ -140,6 +141,7 @@ pub(super) struct Limits {
 // Memory Types
 pub(super) struct MemType {limits: Limits}
 
+#[derive(std::fmt::Debug)]
 pub(super) struct MemArg {
     pub offset: u32,
     pub align: u32

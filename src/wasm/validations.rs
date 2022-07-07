@@ -1,9 +1,8 @@
 use super::types::*;
 use super::instructions::OpCode;
-use super::modules::{Context, Module};
+use super::modules::Context;
 
 pub(super) struct Validator {
-    pub(super) module: Module,
     pub(super) ctx: Context,
     pub vals: Vec<ValType>,
     pub ctrls: Vec<CtrlFrame>,
@@ -14,13 +13,12 @@ pub(super) struct CtrlFrame {
     pub opcode: OpCode,
     pub start_types: Vec<ValType>,
     pub end_types: Vec<ValType>,
-    height: usize,
+    pub height: usize,
     unreachable: bool
 }
 
 fn validator<'a>() -> Validator {
     Validator{
-        module: Module::new(),
         ctx: Context::new(),
         vals: Vec::new(),
         ctrls: Vec::new()
@@ -56,8 +54,8 @@ impl Validator {
     }
 
     pub fn push_vals(&mut self, vals: Vec<ValType>) {
-        for val in vals {
-            self.push_val(val)
+        for val in vals.iter().rev() {
+            self.push_val(*val)
         }
     }
 
@@ -104,14 +102,32 @@ impl Validator {
         }
     }
 
-    pub fn unreachable(&mut self) {
+    pub fn vals_resize(&mut self, size: usize) {
         loop {
-            if self.vals.len() > self.ctrls[0].height {
+            if self.vals.len() > size {
                 self.pop_next_val();
             } else {
                 break;
             }
         }
-        self.ctrls[0].unreachable = false;
+    }
+
+    pub fn unreachable(&mut self) {
+        self.vals_resize(self.ctrls[0].height);
+        self.ctrls[0].unreachable = true;
+    }
+}
+
+impl Context {
+    pub fn get_block_type(&self, blocktype: BlockType) -> FuncType {
+        match blocktype {
+            BlockType::TypeIdx(typeidx) => vec![self.types[typeidx]],
+            BlockType::ValType(None) => FuncType{inputs: Vec::new(), returns: Vec::new()},
+            BlockType::ValType(Some(valtype)) => FuncType {
+                inputs: vec![valtype],
+                returns: vec![valtype]
+            }
+        }
+        
     }
 }
