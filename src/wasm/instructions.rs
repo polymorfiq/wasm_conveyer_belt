@@ -522,6 +522,12 @@ pub(super) enum Instr {
     BrTable(Vec<LabelIdx>, LabelIdx),
     Call(FuncIdx),
     CallIndirect(TableIdx, TypeIdx),
+
+    // Administrative Instructions
+    Trap,
+    Ref(FuncAddr),
+    RefExtern(ExternAddr),
+    Invoke(FuncAddr)
 }
 
 // OpCode Types

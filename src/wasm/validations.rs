@@ -122,9 +122,9 @@ impl Context {
     pub fn get_block_type(&self, blocktype: BlockType) -> FuncType {
         match blocktype {
             BlockType::TypeIdx(typeidx) => vec![self.types[typeidx]],
-            BlockType::ValType(None) => FuncType{inputs: Vec::new(), returns: Vec::new()},
+            BlockType::ValType(None) => FuncType{inputs: vec![], returns: vec![]},
             BlockType::ValType(Some(valtype)) => FuncType {
-                inputs: vec![valtype],
+                inputs: vec![],
                 returns: vec![valtype]
             }
         }

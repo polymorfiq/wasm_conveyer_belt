@@ -30,6 +30,10 @@ impl Module {
     }
 }
 
+struct Store {
+    
+}
+
 struct CtrlFrame {
     opcode: u8,
     start_types: Vec<ValType>,

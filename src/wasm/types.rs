@@ -18,6 +18,17 @@ pub(super) enum ValType {
     // Any
     Unknown
 }
+
+pub(super) enum Val {
+    I32(u32),
+    I64(u64),
+    F32(f32),
+    F64(f64),
+    V128(u128),
+    FuncRef(bool, FuncAddr),
+    ExternRef(bool, ExternAddr),
+}
+
 impl ValType {
     pub fn is_num(self) -> bool {
         match self {
@@ -50,66 +61,7 @@ impl ValType {
     }
 }
 
-pub(super) trait Val {
-    fn is_type(&self, t: ValType) -> bool;
-}
-
-impl Val for dyn NumType {
-    fn is_type(&self, t: ValType) -> bool {
-        match t {
-            ValType::AnyNum => true,
-            ValType::Unknown => true,
-            _ => self.is_type(t)
-        }
-    }
-}
-impl Val for dyn VecType {
-    fn is_type(&self, t: ValType) -> bool {
-        match t {
-            ValType::Unknown => true,
-            _ => self.is_type(t)
-        }
-    }
-}
-
 pub(super) type ResultType = Vec<ValType>;
-
-// Num Types
-pub(super) trait NumType {
-    fn is_type(&self, t: ValType) -> bool;
-}
-impl NumType for I32 {
-    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::I32) }
-}
-impl NumType for I64 {
-    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::I64) }
-}
-impl NumType for F32 {
-    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::F32) }
-}
-impl NumType for F64 {
-    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::F64) }
-}
-
-pub(super) struct I8 {data: u8}
-pub(super) struct I16 {data: u16}
-pub(super) struct I32 {data: u32}
-pub(super) struct I64 {data: u64}
-pub(super) struct F32 {data: f32}
-pub(super) struct F64 {data: f64}
-
-// Vector Types
-pub(super) trait VecType {
-    fn is_type(&self, t: ValType) -> bool;
-    fn bits(&self) -> u128;
-}
-
-impl VecType for V128 {
-    fn is_type(&self, t: ValType) -> bool { matches!(t, ValType::V128) }
-    fn bits(&self) -> u128 { self.data }
-}
-
-pub(super) struct V128 {data: u128}
 
 // Index Types
 pub(super) type Byte = u8;
@@ -221,3 +173,13 @@ pub(super) enum ExportDesc {
     Mem(MemIdx),
     Global(GlobalIdx)
 }
+
+// Address Types
+pub(super) type Addr = usize;
+pub(super) type FuncAddr = Addr;
+pub(super) type TableAddr = Addr;
+pub(super) type MemAddr = Addr;
+pub(super) type GlobalAddr = Addr;
+pub(super) type ElemAddr = Addr;
+pub(super) type DataAddr = Addr;
+pub(super) type ExternAddr = Addr;
